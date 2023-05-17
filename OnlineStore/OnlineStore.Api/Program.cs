@@ -27,8 +27,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Termin_6", Version = "v1" });
-    //Ovo dodajemo kako bi mogli da unesemo token u swagger prilikom testiranja
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "OnlineStore", Version = "v1" });
+    
 
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
