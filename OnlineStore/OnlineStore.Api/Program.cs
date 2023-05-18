@@ -5,22 +5,22 @@ using Microsoft.Identity.Web;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using OnlineStore.Database;
+using OnlineStore.Database.Infrastructure;
 using System.Text;
 
 string _cors = "cors";
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("AzureAd"));
-
-builder.Services.AddDbContextFactory<DataContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DatabaseConnection")));
+builder.Services.AddDbContextFactory<onlineStoreDBContext>(options =>
+   options.UseSqlServer(builder.Configuration.GetConnectionString("DatabaseConnection")));
 
 
-builder.Services.AddDbContext<DataContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DatabaseConnection")));
+builder.Services.AddDbContext<onlineStoreDBContext>(options =>
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("DatabaseConnection"),
+        b => b.MigrationsAssembly("OnlineStore.Api"))
+    );
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -28,7 +28,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "OnlineStore", Version = "v1" });
-    
+
 
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {

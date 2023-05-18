@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace OnlineStore.Models.Enums
 {
-    internal class OrderState
+    public enum OrderState
     {
+        Started,
+        Delivered,
+        Canceled
     }
 }
