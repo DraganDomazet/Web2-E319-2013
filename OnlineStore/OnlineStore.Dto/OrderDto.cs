@@ -1,22 +1,21 @@
-﻿using OnlineStore.Models.Enums;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OnlineStore.Models.Models
+namespace OnlineStore.Dto
 {
-    public class Order
+    public class OrderDto
     {
         public Guid Id { get; set; }
-        public List<OrderLineItem> Products { get; set; } = new List<OrderLineItem>();
+        public List<OrderDto> Products { get; set; }
         public string Comment { get; set; }
         public string DeliveryAddress { get; set; }
         public double Price { get; set; }
-        public OrderState Status { get; set; }
-        public DateTime CancellationWindow { get; set; }
+        public string Status { get; set; }
+        public DateTime CancellationWindow { get; set; }    // 1 Hour from creation
         public DateTime TimeOfDelivery { get; set; }
-        public User Customer { get; set; }
+        public Guid BuyerId { get; set; }
     }
 }
