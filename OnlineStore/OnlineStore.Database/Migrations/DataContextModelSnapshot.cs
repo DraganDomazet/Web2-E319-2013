@@ -45,8 +45,9 @@ namespace OnlineStore.Database.Migrations
                     b.Property<double>("Price")
                         .HasColumnType("float");
 
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("TimeOfDelivery")
                         .HasColumnType("datetime2");
@@ -55,7 +56,7 @@ namespace OnlineStore.Database.Migrations
 
                     b.HasIndex("CustomerId");
 
-                    b.ToTable("Order");
+                    b.ToTable("Orders");
                 });
 
             modelBuilder.Entity("OnlineStore.Models.Models.OrderLineItem", b =>
@@ -82,7 +83,7 @@ namespace OnlineStore.Database.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("OrderLineItem");
+                    b.ToTable("OrderItems");
                 });
 
             modelBuilder.Entity("OnlineStore.Models.Models.Product", b =>
@@ -116,7 +117,7 @@ namespace OnlineStore.Database.Migrations
 
                     b.HasIndex("MerchantId");
 
-                    b.ToTable("Product");
+                    b.ToTable("Products");
                 });
 
             modelBuilder.Entity("OnlineStore.Models.Models.User", b =>
@@ -153,14 +154,18 @@ namespace OnlineStore.Database.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Type")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Username")
+                    b.Property<string>("Type")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("Username")
+                        .IsUnique();
 
                     b.ToTable("Users");
                 });
@@ -181,7 +186,7 @@ namespace OnlineStore.Database.Migrations
                     b.HasOne("OnlineStore.Models.Models.Order", "Order")
                         .WithMany("Products")
                         .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("OnlineStore.Models.Models.Product", "Product")

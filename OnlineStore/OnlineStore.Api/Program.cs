@@ -12,11 +12,11 @@ string _cors = "cors";
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDbContextFactory<onlineStoreDBContext>(options =>
+builder.Services.AddDbContextFactory<DataContext>(options =>
    options.UseSqlServer(builder.Configuration.GetConnectionString("DatabaseConnection")));
 
 
-builder.Services.AddDbContext<onlineStoreDBContext>(options =>
+builder.Services.AddDbContext<DataContext>(options =>
     options.UseSqlServer(
         builder.Configuration.GetConnectionString("DatabaseConnection"),
         b => b.MigrationsAssembly("OnlineStore.Api"))

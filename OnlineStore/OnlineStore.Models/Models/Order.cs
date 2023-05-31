@@ -17,6 +17,7 @@ namespace OnlineStore.Models.Models
         public OrderState Status { get; set; }
         public DateTime CancellationWindow { get; set; }
         public DateTime TimeOfDelivery { get; set; }
+        public Guid CustomerId { get; set; }
         public User Customer { get; set; }
     }
 }
