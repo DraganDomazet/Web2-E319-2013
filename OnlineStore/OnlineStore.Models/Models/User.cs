@@ -10,7 +10,7 @@ namespace OnlineStore.Models.Models
         public string Password { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public string DateOfBirth { get; set; }
+        public DateTime DateOfBirth { get; set; }
         public string Address { get; set; }
         public string ImageUrl { get; set; }
         public UserType Type { get; set; }
