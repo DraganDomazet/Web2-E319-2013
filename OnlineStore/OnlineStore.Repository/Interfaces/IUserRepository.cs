@@ -10,9 +10,8 @@ namespace OnlineStore.Repository.Interfaces
     public interface IUserRepository
     {
         User Add(User newUser);
-        //User Find(User user);
-        //User FindEmail(User user);
-        //User Edit(User user);
+        User FindUser(string userName);
+        User UpdateUser(User user);
         //User Verificate(User user);
         //User FindById(long Id);
         //List<User> GetAll();

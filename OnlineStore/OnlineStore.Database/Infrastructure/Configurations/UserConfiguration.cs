@@ -27,7 +27,7 @@ namespace OnlineStore.Database.Infrastructure.Configurations
                    .WithOne(x => x.Customer)
                    .OnDelete(DeleteBehavior.Cascade);
 
-            builder.Property(x => x.Type)
+            builder.Property(x => x.UserType)
                    .HasConversion(
                         x => x.ToString(),
                         x => Enum.Parse<UserType>(x)

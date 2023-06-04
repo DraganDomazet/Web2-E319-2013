@@ -1,12 +1,16 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Identity.Web;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using OnlineStore.Database;
-using OnlineStore.Database.Infrastructure;
+using OnlineStore.Services.Interfaces;
+using OnlineStore.Services;
 using System.Text;
+using AutoMapper;
+using OnlineStore.Mapping;
+using OnlineStore.Repository.Interfaces;
+using OnlineStore.Repository;
 
 string _cors = "cors";
 
@@ -70,7 +74,7 @@ builder.Services.AddAuthentication(opt =>
                    ValidateLifetime = true,//Validira trajanje tokena
                    ValidateIssuerSigningKey = true, //validira potpis token, ovo je jako vazno!
                    ValidIssuer = "http://localhost:44398", //odredjujemo koji server je validni izdavalac
-                   IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetSection("AppSettings")["SecretKey"]))//navodimo privatni kljuc kojim su potpisani nasi tokeni
+                   IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["SecretKey"]))//navodimo privatni kljuc kojim su potpisani nasi tokeni
                };
            });
 
@@ -84,6 +88,27 @@ builder.Services.AddCors(options =>
                .AllowCredentials();
     });
 });
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("user", policy => policy.RequireClaim("user")); //Ovde mozemo kreirati pravilo za validaciju nekog naseg claima
+});
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("user", policy => policy.RequireClaim("user")); //Ovde mozemo kreirati pravilo za validaciju nekog naseg claima
+});
+
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+
+var mapperConfig = new MapperConfiguration(mc =>
+{
+    mc.AddProfile(new MappingProfile());
+});
+
+IMapper mapper = mapperConfig.CreateMapper();
+builder.Services.AddSingleton(mapper);
 
 
 var app = builder.Build();

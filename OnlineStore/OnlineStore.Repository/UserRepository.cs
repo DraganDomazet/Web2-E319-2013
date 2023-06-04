@@ -23,5 +23,17 @@ namespace OnlineStore.Repository
             _dbContext.SaveChanges();
             return newUser;
         }
+
+        public User FindUser(string userName)
+        {
+            return _dbContext.Users.FirstOrDefault(u => String.Equals(u.Username, userName));
+        }
+        public User UpdateUser(User user)
+        {
+            _dbContext.Users.Update(user);
+            _dbContext.SaveChanges();
+            return user;
+        }
+
     }
 }

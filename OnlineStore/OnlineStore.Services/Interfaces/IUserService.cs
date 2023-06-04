@@ -10,8 +10,8 @@ namespace OnlineStore.Services.Interfaces
     public interface IUserService
     {
         UserUpdateDto AddUser(UserDto newUser);
-        //LoginResponseDto LogIn(UserLoginDto dto);
-        //UserEditDto Edit(UserEditDto dto);
+        string Login(UserLoginDto dto);
+        UserUpdateDto UpdateUser(UserUpdateDto dto);
         //UserLoginDto Verificate(UserEditDto userLoginDto);
         //UserEditDto GetUser(long id);
         //List<UserEditDto> GetRequests();

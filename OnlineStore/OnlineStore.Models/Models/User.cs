@@ -13,7 +13,7 @@ namespace OnlineStore.Models.Models
         public DateTime DateOfBirth { get; set; }
         public string Address { get; set; }
         public string ImageUrl { get; set; }
-        public UserType Type { get; set; }
+        public UserType UserType { get; set; }
         public List<Product> Products { get; set; }
         public List<Order> Orders { get; set; }
     }

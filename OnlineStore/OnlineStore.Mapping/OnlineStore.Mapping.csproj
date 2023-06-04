@@ -7,17 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Interfaces\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="12.0.1" />
-    <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\OnlineStore.Dto\OnlineStore.Dto.csproj" />
-    <ProjectReference Include="..\OnlineStore.Repository\OnlineStore.Repository.csproj" />
+    <ProjectReference Include="..\OnlineStore.Models\OnlineStore.Models.csproj" />
   </ItemGroup>
 
 </Project>
