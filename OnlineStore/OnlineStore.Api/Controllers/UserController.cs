@@ -36,5 +36,11 @@ namespace OnlineStore.Api.Controllers
         {
             return Ok(_userService.Login(userDto));
         }
+
+        [HttpPost("external-login")]
+        public async Task<IActionResult> ExternalLogin([FromBody] FacebookTokenDto fbTokenDto)
+        {
+            return Ok(_userService.FacebookRegisterAndLogin(fbTokenDto).Result);
+        }
     }
 }

@@ -18,14 +18,16 @@ namespace OnlineStore.Services
     public class UserService : IUserService
     {
         private readonly IMapper _mapper;
+        private readonly IAuthService _authService;
         private readonly IUserRepository _userRepository;
         private readonly IConfigurationSection _secretKey;
 
-        public UserService(IUserRepository userRepository, IMapper mapper, IConfiguration configuration)
+        public UserService(IUserRepository userRepository, IMapper mapper, IConfiguration configuration, IAuthService authService)
         {
+            _mapper = mapper;
+            _authService = authService;
             _userRepository = userRepository;
             _secretKey = configuration.GetSection("SecretKey");
-            _mapper = mapper;
         }
 
         public UserUpdateDto AddUser(UserDto userDto)
@@ -107,7 +109,7 @@ namespace OnlineStore.Services
                 SymmetricSecurityKey secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secretKey.Value));
                 var signinCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
                 var tokeOptions = new JwtSecurityToken(
-                    issuer: "http://localhost:44398", //url servera koji je izdao token
+                    issuer: "http://localhost:44316", //url servera koji je izdao token
                     claims: claims, //claimovi
                     expires: DateTime.Now.AddYears(1), //vazenje tokena u minutama
                     signingCredentials: signinCredentials //kredencijali za potpis
@@ -120,6 +122,60 @@ namespace OnlineStore.Services
                 return null;
             }
         }
+        public async Task<AuthDto> FacebookRegisterAndLogin(FacebookTokenDto fbTokenDto)
+        {
+            FacebookInfoDto socialInfo = await _authService.VerifyFacebookTokenAsync(fbTokenDto);
+
+            if (socialInfo == null)
+                return null;
+            User user = _userRepository.FindByEmail(socialInfo.Email);
+            if (user == null)
+            {
+                user = new User()
+                {
+                    Email = socialInfo.Email,
+                    Username = socialInfo.Email.Substring(0, socialInfo.Email.IndexOf("@")),
+                    FirstName = socialInfo.Name,
+                    LastName = socialInfo.LastName,
+                    Password = socialInfo.ID,
+                    DateOfBirth = DateTime.Now, //Because user might have made this data private on account
+                    UserType = Models.Enums.UserType.Customer,
+                    Address = socialInfo.Address ?? "address",
+                    ImageUrl = socialInfo.Picture ?? "noPicture"
+                };
+
+
+                _userRepository.Add(user);
+
+            }
+
+            List<Claim> claims = new List<Claim>();
+            claims.Add(new Claim(ClaimTypes.Role, "Customer"));
+            claims.Add(new Claim(ClaimTypes.Role, "user"));
+
+            SymmetricSecurityKey secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secretKey.Value));
+            var signinCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
+            var tokeOptions = new JwtSecurityToken(
+                issuer: "http://localhost:44316", //url servera koji je izdao token
+                claims: claims, //claimovi
+                expires: DateTime.Now.AddYears(1), //vazenje tokena u minutama
+                signingCredentials: signinCredentials //kredencijali za potpis
+            );
+            string tokenString = new JwtSecurityTokenHandler().WriteToken(tokeOptions);
+            AuthDto authResponse = new AuthDto()
+            {
+                ID = user.Id,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email,
+                Address = user.Address,
+                Picture = user.ImageUrl
+
+            };
+            return authResponse;
+
+        }
+
 
     }
 

@@ -12,8 +12,9 @@ namespace OnlineStore.Repository.Interfaces
         User Add(User newUser);
         User FindUser(string userName);
         User UpdateUser(User user);
+        User FindByEmail(string email);
         //User Verificate(User user);
-        //User FindById(long Id);
+
         //List<User> GetAll();
         //void Remove(User entity);
 

@@ -28,6 +28,12 @@ namespace OnlineStore.Repository
         {
             return _dbContext.Users.FirstOrDefault(u => String.Equals(u.Username, userName));
         }
+
+        public User FindByEmail(string email)
+        {
+            return _dbContext.Users.SingleOrDefault<User>(u => String.Equals(u.Email, email));
+        }
+
         public User UpdateUser(User user)
         {
             _dbContext.Users.Update(user);
