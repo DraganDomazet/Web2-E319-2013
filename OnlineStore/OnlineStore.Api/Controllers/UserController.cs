@@ -37,10 +37,25 @@ namespace OnlineStore.Api.Controllers
             return Ok(_userService.Login(userDto));
         }
 
-        [HttpPost("external-login")]
-        public async Task<IActionResult> ExternalLogin([FromBody] FacebookTokenDto fbTokenDto)
+        [HttpPost("facebook-login")]
+        public async Task<IActionResult> FacebookLogin([FromBody] FacebookTokenDto fbTokenDto)
         {
-            return Ok(_userService.FacebookRegisterAndLogin(fbTokenDto).Result);
+            return Ok(_userService.FacebookLogin(fbTokenDto).Result);
         }
+
+        [HttpPut("verify")]
+        [Authorize(Roles = "Admin")]
+        public IActionResult Verify([FromBody] UserUpdateDto userUpdateDto)
+        {
+            return Ok(_userService.Verify(userUpdateDto));
+        }
+
+        [HttpGet("check-verification")]
+        [Authorize(Roles = "Admin")]
+        public IActionResult GetRequested()
+        {
+            return Ok(_userService.GetUnverifiedMerchants());
+        }
+
     }
 }

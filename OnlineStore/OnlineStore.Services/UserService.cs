@@ -21,16 +21,18 @@ namespace OnlineStore.Services
         private readonly IAuthService _authService;
         private readonly IUserRepository _userRepository;
         private readonly IConfigurationSection _secretKey;
+        private readonly IEmailService _emailservice;
 
-        public UserService(IUserRepository userRepository, IMapper mapper, IConfiguration configuration, IAuthService authService)
+        public UserService(IUserRepository userRepository, IMapper mapper, IConfiguration configuration, IAuthService authService, IEmailService emailservice)
         {
             _mapper = mapper;
             _authService = authService;
             _userRepository = userRepository;
             _secretKey = configuration.GetSection("SecretKey");
+            _emailservice = emailservice;
         }
 
-        public UserUpdateDto AddUser(UserDto userDto)
+        public async Task<UserUpdateDto> AddUser(UserDto userDto)
         {
             User user = _mapper.Map<User>(userDto);
 
@@ -51,6 +53,16 @@ namespace OnlineStore.Services
             {
                 user.UserType = Models.Enums.UserType.Merchant;
             }
+
+            user.ImageUrl = $"Images\\defaultUser.jpg";
+            if (userDto.ImageUrl != null)
+            {
+                string path = "Users";
+                string name = user.Email.Split("@")[0];
+
+                user.ImageUrl = await _userRepository.SaveImage(userDto.ImageUrl, name, path);
+            }
+
             user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
             User u = _userRepository.Add(user);
             return new UserUpdateDto { Username = u.Username, Address = u.Address, DateOfBirth = u.DateOfBirth, Email = u.Email, FirstName = u.FirstName, LastName = u.LastName, UserImage = u.ImageUrl, Password = u.Password, UserType = u.UserType.ToString() };
@@ -109,9 +121,9 @@ namespace OnlineStore.Services
                 SymmetricSecurityKey secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secretKey.Value));
                 var signinCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
                 var tokeOptions = new JwtSecurityToken(
-                    issuer: "http://localhost:44316", //url servera koji je izdao token
+                    issuer: "http://localhost:44398", //url servera koji je izdao token
                     claims: claims, //claimovi
-                    expires: DateTime.Now.AddYears(1), //vazenje tokena u minutama
+                    expires: DateTime.Now.AddMinutes(7), //vazenje tokena u minutama
                     signingCredentials: signinCredentials //kredencijali za potpis
                 );
                 string tokenString = new JwtSecurityTokenHandler().WriteToken(tokeOptions);
@@ -122,7 +134,7 @@ namespace OnlineStore.Services
                 return null;
             }
         }
-        public async Task<AuthDto> FacebookRegisterAndLogin(FacebookTokenDto fbTokenDto)
+        public async Task<AuthDto> FacebookLogin(FacebookTokenDto fbTokenDto)
         {
             FacebookInfoDto socialInfo = await _authService.VerifyFacebookTokenAsync(fbTokenDto);
 
@@ -174,6 +186,43 @@ namespace OnlineStore.Services
             };
             return authResponse;
 
+        }
+
+        public UserLoginDto Verify(UserUpdateDto userUpdateDto)
+        {
+            User user = new User { Username = userUpdateDto.Username, Password = userUpdateDto.Password };
+
+
+            user = _userRepository.FindUser(user.Username);
+            if (user != null)
+            {
+                _emailservice.SendEmail(userUpdateDto.Email, "VERIFICATE", "You are successufully verificated!");
+
+                user.verificationStatus = Models.Enums.VerificationStatus.Accepted;
+                User u = _userRepository.SaveVerificationStatus(user);
+                if (u == null)
+                    return null;
+                else
+                {
+                    return new UserLoginDto { Username = u.Username, Password = u.Password };
+                }
+            }
+            else
+                return null;
+        }
+
+        public List<UserUpdateDto> GetUnverifiedMerchants()
+        {
+            List<UserUpdateDto> userDtos = new List<UserUpdateDto>();
+            foreach (User u in _userRepository.GetAllUsers())
+            {
+                if (u.verificationStatus == Models.Enums.VerificationStatus.Pending && u.UserType == Models.Enums.UserType.Merchant)
+                {
+                    UserUpdateDto user = new UserUpdateDto { Username = u.Username, Address = u.Address, DateOfBirth = u.DateOfBirth, Email = u.Email, FirstName = u.FirstName, LastName = u.LastName, UserImage = u.ImageUrl, Password = u.Password, UserType = u.UserType.ToString()};
+                    userDtos.Add(user);
+                }
+            }
+            return userDtos;
         }
 
 

@@ -78,6 +78,13 @@ builder.Services.AddAuthentication(opt =>
                };
            });
 
+//builder.Services.AddAuthentication().AddFacebook(opt =>
+//    {
+//        opt.AppId = builder.Configuration["FacebookAuthSettings:clientId"];
+//        opt.AppSecret = builder.Configuration["FacebookAuthSettings:clientSecret"];
+//    }
+//);
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(name: _cors, builder =>
@@ -102,6 +109,7 @@ builder.Services.AddAuthorization(options =>
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddTransient<IEmailService, EmailService>();
 
 var mapperConfig = new MapperConfiguration(mc =>
 {

@@ -1,4 +1,5 @@
-﻿using OnlineStore.Database;
+﻿using Microsoft.AspNetCore.Http;
+using OnlineStore.Database;
 using OnlineStore.Models.Models;
 using OnlineStore.Repository.Interfaces;
 using System;
@@ -39,6 +40,33 @@ namespace OnlineStore.Repository
             _dbContext.Users.Update(user);
             _dbContext.SaveChanges();
             return user;
+        }
+
+        public User SaveVerificationStatus(User user)
+        {
+            _dbContext.Users.Update(user);
+            _dbContext.SaveChanges();
+            return user;
+        }
+
+        public List<User> GetAllUsers()
+        {
+            return _dbContext.Users.ToList();
+        }
+
+        public async Task<string> SaveImage(IFormFile imageFile, string name, string path)
+        {
+   
+            string currentTime = DateTime.Now.ToLocalTime().ToString().Replace(':', '-');
+            string imageName = name + "_" + currentTime + Path.GetExtension(imageFile.FileName);
+            var imagePath = Path.Combine(path, imageName);
+
+            using (var fileStream = new FileStream(imagePath, FileMode.Create, FileAccess.Write))
+            {
+                await imageFile.CopyToAsync(fileStream);
+            }
+
+            return imagePath;
         }
 
     }

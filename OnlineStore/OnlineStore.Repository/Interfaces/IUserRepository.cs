@@ -1,4 +1,5 @@
-﻿using OnlineStore.Models.Models;
+﻿using Microsoft.AspNetCore.Http;
+using OnlineStore.Models.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,10 +14,8 @@ namespace OnlineStore.Repository.Interfaces
         User FindUser(string userName);
         User UpdateUser(User user);
         User FindByEmail(string email);
-        //User Verificate(User user);
-
-        //List<User> GetAll();
-        //void Remove(User entity);
-
+        User SaveVerificationStatus(User user);
+        List<User> GetAllUsers();
+        Task<string> SaveImage(IFormFile imageFile, string name, string path);
     }
 }
