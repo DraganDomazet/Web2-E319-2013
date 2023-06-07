@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { LogIn } from "../services/UserService";
+import Register from "./Register";
 import * as ReactDOMClient from 'react-dom/client';
 
 export default function Login() {
@@ -46,7 +47,13 @@ export default function Login() {
         }
         return true;
     }
-    
+    const register =  e => {
+
+        e.preventDefault();
+        const container = document.getElementById('root');
+        const root = ReactDOMClient.createRoot(container);
+        root.render(<Register></Register>)
+    }
 
     return (
         <div className="jumbotron text-center">
@@ -59,6 +66,7 @@ export default function Login() {
                 <input type={"submit"} name='uloguj' value={"Log in"} onChange={handleInputChanges} className="btn btn-primary"></input><br />
                 </form>
                 <br />
+            <input type={"submit"} name='registruj' value={"Register"} onClick={register} className="btn btn-primary"></input>
                 <br />
             {alertMessage}
         </div>
