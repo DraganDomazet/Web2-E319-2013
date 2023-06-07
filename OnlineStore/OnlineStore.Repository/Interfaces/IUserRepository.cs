@@ -16,6 +16,7 @@ namespace OnlineStore.Repository.Interfaces
         User FindByEmail(string email);
         User SaveVerificationStatus(User user);
         List<User> GetAllUsers();
+        User FindById(Guid Id);
         Task<string> SaveImage(IFormFile imageFile, string name, string path);
     }
 }

@@ -78,12 +78,12 @@ builder.Services.AddAuthentication(opt =>
                };
            });
 
-//builder.Services.AddAuthentication().AddFacebook(opt =>
-//    {
-//        opt.AppId = builder.Configuration["FacebookAuthSettings:clientId"];
-//        opt.AppSecret = builder.Configuration["FacebookAuthSettings:clientSecret"];
-//    }
-//);
+builder.Services.AddAuthentication().AddFacebook(opt =>
+    {
+        opt.AppId = builder.Configuration["FacebookAuthSettings:clientId"];
+        opt.AppSecret = builder.Configuration["FacebookAuthSettings:clientSecret"];
+    }
+);
 
 builder.Services.AddCors(options =>
 {
@@ -108,7 +108,10 @@ builder.Services.AddAuthorization(options =>
 
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IProductService, ProductService>();
+
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddTransient<IEmailService, EmailService>();
 
 var mapperConfig = new MapperConfiguration(mc =>

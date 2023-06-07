@@ -36,4 +36,8 @@
     <ProjectReference Include="..\OnlineStore.Services\OnlineStore.Services.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Images\" />
+  </ItemGroup>
+
 </Project>

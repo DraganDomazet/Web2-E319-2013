@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using OnlineStore.Dto;
@@ -23,6 +24,7 @@ namespace OnlineStore.Services
         private readonly IConfigurationSection _secretKey;
         private readonly IEmailService _emailservice;
 
+
         public UserService(IUserRepository userRepository, IMapper mapper, IConfiguration configuration, IAuthService authService, IEmailService emailservice)
         {
             _mapper = mapper;
@@ -32,7 +34,7 @@ namespace OnlineStore.Services
             _emailservice = emailservice;
         }
 
-        public async Task<UserUpdateDto> AddUser(UserDto userDto)
+        public UserUpdateDto AddUser(UserDto userDto)
         {
             User user = _mapper.Map<User>(userDto);
 
@@ -54,18 +56,56 @@ namespace OnlineStore.Services
                 user.UserType = Models.Enums.UserType.Merchant;
             }
 
-            user.ImageUrl = $"Images\\defaultUser.jpg";
-            if (userDto.ImageUrl != null)
-            {
-                string path = "Users";
-                string name = user.Email.Split("@")[0];
-
-                user.ImageUrl = await _userRepository.SaveImage(userDto.ImageUrl, name, path);
-            }
-
             user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
             User u = _userRepository.Add(user);
             return new UserUpdateDto { Username = u.Username, Address = u.Address, DateOfBirth = u.DateOfBirth, Email = u.Email, FirstName = u.FirstName, LastName = u.LastName, UserImage = u.ImageUrl, Password = u.Password, UserType = u.UserType.ToString() };
+        }
+
+        public async Task<bool> UploadImage(IFormFile imageFile, Guid id)
+        {
+            try
+            {
+                var t = Path.GetExtension(imageFile.FileName);
+                var tt = id.ToString();
+                var filePath = Path.Combine("Images", id.ToString() + Path.GetExtension(imageFile.FileName));
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await imageFile.CopyToAsync(stream);
+                }
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public UserUpdateDto GetUser(Guid id)
+        {
+
+            User u = _userRepository.FindById(id);
+            if (u == null)
+                return null;
+            else
+            {
+                return new UserUpdateDto { Username = u.Username, Address = u.Address, DateOfBirth = u.DateOfBirth, Email = u.Email, FirstName = u.FirstName, LastName = u.LastName, UserImage = u.ImageUrl, Password = u.Password, UserType = u.Username.ToString() };
+            }
+        }
+
+        public byte[] GetImage(Guid id)
+        {
+            try
+            {
+                UserUpdateDto userUpdateDto = GetUser(id);
+                string fileName = userUpdateDto.UserImage.Split("\\")[0];
+                var path = Path.Combine("Images", id.ToString() + ".png");
+                var imageBytes = File.ReadAllBytes(path);
+                return imageBytes;
+            }
+            catch
+            {
+                return new byte[0];
+            }
         }
 
         public UserUpdateDto UpdateUser(UserUpdateDto dto)
@@ -198,7 +238,7 @@ namespace OnlineStore.Services
             {
                 _emailservice.SendEmail(userUpdateDto.Email, "VERIFICATE", "You are successufully verificated!");
 
-                user.verificationStatus = Models.Enums.VerificationStatus.Accepted;
+                user.VerificationStatus = Models.Enums.VerificationStatus.Accepted;
                 User u = _userRepository.SaveVerificationStatus(user);
                 if (u == null)
                     return null;
@@ -216,9 +256,9 @@ namespace OnlineStore.Services
             List<UserUpdateDto> userDtos = new List<UserUpdateDto>();
             foreach (User u in _userRepository.GetAllUsers())
             {
-                if (u.verificationStatus == Models.Enums.VerificationStatus.Pending && u.UserType == Models.Enums.UserType.Merchant)
+                if (u.VerificationStatus == Models.Enums.VerificationStatus.Pending && u.UserType == Models.Enums.UserType.Merchant)
                 {
-                    UserUpdateDto user = new UserUpdateDto { Username = u.Username, Address = u.Address, DateOfBirth = u.DateOfBirth, Email = u.Email, FirstName = u.FirstName, LastName = u.LastName, UserImage = u.ImageUrl, Password = u.Password, UserType = u.UserType.ToString()};
+                    UserUpdateDto user = new UserUpdateDto { Username = u.Username, Address = u.Address, DateOfBirth = u.DateOfBirth, Email = u.Email, FirstName = u.FirstName, LastName = u.LastName, UserImage = u.ImageUrl, Password = u.Password, UserType = u.UserType.ToString() };
                     userDtos.Add(user);
                 }
             }

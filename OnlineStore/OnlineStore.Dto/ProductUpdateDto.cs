@@ -12,7 +12,7 @@ namespace OnlineStore.Dto
         public Guid Id { get; set; }
         public double Price { get; set; }
         public string Description { get; set; }
-        public string Image { get; set; }
+        public string ProductImageUrl { get; set; }
         public Guid MerchantId { get; set; }
     }
 }

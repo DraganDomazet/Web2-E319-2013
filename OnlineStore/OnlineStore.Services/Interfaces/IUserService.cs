@@ -1,4 +1,5 @@
-﻿using OnlineStore.Dto;
+﻿using Microsoft.AspNetCore.Http;
+using OnlineStore.Dto;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,15 +10,14 @@ namespace OnlineStore.Services.Interfaces
 {
     public interface IUserService
     {
-        Task<UserUpdateDto> AddUser(UserDto newUser);
+        UserUpdateDto AddUser(UserDto userDto);
         string Login(UserLoginDto dto);
         UserUpdateDto UpdateUser(UserUpdateDto dto);
         Task<AuthDto> FacebookLogin(FacebookTokenDto tokenDto);
         UserLoginDto Verify(UserUpdateDto userUpdateDto);
-        //UserEditDto GetUser(long id);
+        UserUpdateDto GetUser(Guid id);
         List<UserUpdateDto> GetUnverifiedMerchants();
-        //void Remove(UserEditDto user);
-        //Task<bool> UploadImage(IFormFile image, int id);
-        //byte[] GetImage(int id);
+        Task<bool> UploadImage(IFormFile image, Guid id);
+        byte[] GetImage(Guid id);
     }
 }

@@ -54,6 +54,11 @@ namespace OnlineStore.Repository
             return _dbContext.Users.ToList();
         }
 
+        public User FindById(Guid Id)
+        {
+            return _dbContext.Users.SingleOrDefault<User>(u => u.Id == Id);
+        }
+
         public async Task<string> SaveImage(IFormFile imageFile, string name, string path)
         {
    

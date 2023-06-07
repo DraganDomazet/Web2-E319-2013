@@ -13,7 +13,7 @@ namespace OnlineStore.Models.Models
         public int Amount { get; set; }
         public double IndividualPrice { get; set; }
         public string Description { get; set; }
-        public string ImageURL { get; set; }
+        public string ProductImageUrl { get; set; }
         public Guid MerchantId { get; set; }
         public User Merchant { get; set; }
     }
