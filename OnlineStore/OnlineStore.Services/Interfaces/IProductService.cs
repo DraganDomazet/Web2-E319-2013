@@ -10,5 +10,6 @@ namespace OnlineStore.Services.Interfaces
     public interface IProductService
     {
         ProductUpdateDto AddNew(ProductDto productDto);
+        ProductUpdateDto GetProductById(Guid id);
     }
 }

@@ -25,5 +25,13 @@ namespace OnlineStore.Api.Controllers
         {
             return Ok(_productService.AddNew(productDto));
         }
+
+        [HttpGet("get-product/{id}")]
+        [Authorize(Roles = "user")]
+        public IActionResult GetProductById(Guid id)
+        {
+            return Ok(_productService.GetProductById(id));
+        }
+
     }
 }

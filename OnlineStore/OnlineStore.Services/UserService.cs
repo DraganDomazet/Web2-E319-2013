@@ -161,7 +161,7 @@ namespace OnlineStore.Services
                 SymmetricSecurityKey secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secretKey.Value));
                 var signinCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
                 var tokeOptions = new JwtSecurityToken(
-                    issuer: "http://localhost:44398", //url servera koji je izdao token
+                    issuer: "http://localhost:49670", //url servera koji je izdao token
                     claims: claims, //claimovi
                     expires: DateTime.Now.AddMinutes(7), //vazenje tokena u minutama
                     signingCredentials: signinCredentials //kredencijali za potpis
@@ -208,7 +208,7 @@ namespace OnlineStore.Services
             SymmetricSecurityKey secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secretKey.Value));
             var signinCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
             var tokeOptions = new JwtSecurityToken(
-                issuer: "http://localhost:44316", //url servera koji je izdao token
+                issuer: "http://localhost:49670", //url servera koji je izdao token
                 claims: claims, //claimovi
                 expires: DateTime.Now.AddYears(1), //vazenje tokena u minutama
                 signingCredentials: signinCredentials //kredencijali za potpis

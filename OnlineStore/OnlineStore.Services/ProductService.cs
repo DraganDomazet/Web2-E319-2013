@@ -32,5 +32,12 @@ namespace OnlineStore.Services
             ProductUpdateDto productUpdateDto = _mapper.Map<ProductUpdateDto>(product);
             return productUpdateDto;
         }
+
+        public ProductUpdateDto GetProductById(Guid Id)
+        {
+            Product product = _productRepository.GetProductById(Id);
+            ProductUpdateDto productUpdateDto = _mapper.Map<ProductUpdateDto>(product);
+            return productUpdateDto;
+        }
     }
 }

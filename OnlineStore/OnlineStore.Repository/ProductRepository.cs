@@ -23,5 +23,9 @@ namespace OnlineStore.Repository
             _dbContext.SaveChanges();
             return product;
         }
+        public Product GetProductById(Guid id)
+        {
+            return _dbContext.Products.SingleOrDefault<Product>(u => u.Id == id);
+        }
     }
 }
