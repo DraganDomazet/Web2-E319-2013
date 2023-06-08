@@ -23,12 +23,12 @@ namespace OnlineStore.Api.Controllers
             return Ok(_userService.AddUser(userDto));
         }
 
-        [HttpPost("upload-image/{id}")]
-        public async Task<IActionResult> UploadImage(IFormFile image, Guid id)
+        [HttpPost("upload-image/{userImage}")]
+        public async Task<IActionResult> UploadImage(IFormFile image, string userImage)
         {
             try
             {
-                await _userService.UploadImage(image, id);
+                await _userService.UploadImage(image, userImage);
                 return Ok();
             }
             catch
@@ -68,7 +68,7 @@ namespace OnlineStore.Api.Controllers
         }
 
         [HttpPost("login")]
-        public IActionResult LogIn([FromBody] UserLoginDto userDto)
+        public IActionResult Login([FromBody] UserLoginDto userDto)
         {
             return Ok(_userService.Login(userDto));
         }

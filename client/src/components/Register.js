@@ -10,30 +10,28 @@ export default function Register() {
     const [address, setAddress] = useState('');
     const [imageUrl, setImageUrl] = useState("");
     const [file, setFile] = useState(null);
-    const [dateOfBirth, setDateOfBirth] = useState('');
-    const [alertMessage, setAlert] = useState(<div></div>);
     const handleInputChanges = e => {
         const { name, value } = e.target
-        if (name == "username") {
+        if (name === "username") {
             setUsername(value);
         }
-        if (name == "password") {
+        if (name === "password") {
             setPassword(value);
         }
-        if (name == "firstname") {
+        if (name === "firstname") {
             setName(value);
         }
-        if (name == "lastname") {
+        if (name === "lastname") {
             setLastname(value);
         }
-        if (name == "email") {
+        if (name === "email") {
             setEmail(value);
         }
 
-        if (name == "address") {
+        if (name === "address") {
             setAddress(value);
         }
-        if (name == "uloga") {
+        if (name === "uloga") {
             setAddress(value);
         }
     }
@@ -43,16 +41,16 @@ export default function Register() {
 
         e.preventDefault();
         if (validate()) {
+            console.log(dateInputRef.current.value);
+            console.log(username + "/" + password + "/" + firstname + "/" + email + "/" + address + "/" + dateInputRef.current.value + "/" + uloga.current.value);
 
-
-            console.log(dateInputRef.current.value)
-            console.log(username + "/" + password + "/" + firstname + "/" + email + "/" + address + "/" + dateInputRef.current.value + "/" + uloga.current.value)
-            const values = { Username: username, Password: password, FirstName: firstname, LastName: lastname, Email: email, Address: address, UserType: uloga.current.value, DateOfBirth: dateInputRef.current.value };
+            const values = { Username: username, Password: password, FirstName: firstname, LastName: lastname, Email: email, Address: address, UserType: uloga.current.value, DateOfBirth: dateInputRef.current.value, ImageUrl: 'id' };
             const resp = await RegisterUser(values);
             console.log(resp);
 
             if (file != null) {
-                const response = AddImage(file, resp.data.id);
+                const response = AddImage(file, resp.data.username);
+                const test = response;
                 console.log(response);
             }
 
@@ -141,12 +139,11 @@ export default function Register() {
                 </select><br /><br />
 
                 Image: <input type="file" onChange={handleFileSelect} />
-                {imageUrl && <img src={URL.createObjectURL(imageUrl)} height={300} width={300} />}<br /><br />
+                {imageUrl && <img src={URL.createObjectURL(imageUrl)} height={300} width={300} alt="" />}<br /><br />
 
                 <input type={"submit"} name='registruj' value={"Register"} onChange={handleInputChanges} className="btn btn-primary"></input><br />
             </form>
             <br />
-            {alertMessage}
         </div>
     )
 

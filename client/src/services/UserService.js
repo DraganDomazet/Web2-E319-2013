@@ -3,7 +3,7 @@ import { urlLogin } from '../endpoints';
 import { urlRegister } from '../endpoints';
 
 
-export const LogIn = async (UserLoginDto) => {
+export const Login = async (UserLoginDto) => {
     return await axios.post(urlLogin, UserLoginDto);
 }
 

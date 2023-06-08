@@ -14,6 +14,7 @@ namespace OnlineStore.Mapping
         public MappingProfile()
         {
             CreateMap<User, UserDto>().ReverseMap();
+            CreateMap<User, AuthDto>().ReverseMap();
             CreateMap<Product, ProductDto>().ReverseMap();
             CreateMap<Product, ProductUpdateDto>().ReverseMap();
             //CreateMap<Order, OrderDto>().ReverseMap();

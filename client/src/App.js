@@ -1,11 +1,17 @@
-import axios, {AxiosResponse} from 'axios';
 import './App.css';
-import Login from "./components/Login";
+import LogIn from "./components/LogIn";
+import Register from './components/Register';
+import HomePage from './components/HomePage';
+import { Routes, Route } from 'react-router-dom'
 
 
 function App() {
     return (
-        <Login></Login>
+        <Routes>
+            <Route path='/register' element={<Register />} />
+            <Route path='/homepage' element={<HomePage />} />
+            <Route path='/' element={<LogIn />} />
+        </Routes>
     );
 }
 

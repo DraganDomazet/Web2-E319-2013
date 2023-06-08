@@ -1,22 +1,24 @@
 import React, { useState } from "react";
-import { LogIn } from "../services/UserService";
+import { Login } from "../services/UserService";
 import Register from "./Register";
 import * as ReactDOMClient from 'react-dom/client';
+import { useNavigate } from 'react-router-dom';
 
-export default function Login() {
+
+export default function LogIn() {
+    const navigate = useNavigate();
 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const handleInputChanges = e => {
         const { name, value } = e.target
-        if (name == "username") {
+        if (name === "username") {
             setUsername(value);
         }
-        if (name == "password") {
+        if (name === "password") {
             setPassword(value);
         }
     }
-    const [alertMessage, setAlert] = useState(<div></div>);
 
     const login = async e => {
 
@@ -24,8 +26,9 @@ export default function Login() {
         if (validate()) {
 
             const values = { Username: username, Password: password };
-            const resp = await LogIn(values);
+            const resp = await Login(values);
             console.log(resp);
+            navigate('homepage', { state: { user: resp.data }});
 
         }
     }
@@ -52,7 +55,7 @@ export default function Login() {
         e.preventDefault();
         const container = document.getElementById('root');
         const root = ReactDOMClient.createRoot(container);
-        root.render(<Register></Register>)
+        root.render(<Register></Register>);
     }
 
     return (
@@ -68,7 +71,6 @@ export default function Login() {
                 <br />
             <input type={"submit"} name='registruj' value={"Register"} onClick={register} className="btn btn-primary"></input>
                 <br />
-            {alertMessage}
         </div>
     )
 }

@@ -56,18 +56,18 @@ namespace OnlineStore.Services
                 user.UserType = Models.Enums.UserType.Merchant;
             }
 
+            user.ImageUrl = user.Username;
+
             user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
             User u = _userRepository.Add(user);
-            return new UserUpdateDto { Username = u.Username, Address = u.Address, DateOfBirth = u.DateOfBirth, Email = u.Email, FirstName = u.FirstName, LastName = u.LastName, UserImage = u.ImageUrl, Password = u.Password, UserType = u.UserType.ToString() };
+            return new UserUpdateDto {Id = u.Id, Username = u.Username, Address = u.Address, DateOfBirth = u.DateOfBirth, Email = u.Email, FirstName = u.FirstName, LastName = u.LastName, UserImage = u.ImageUrl, Password = u.Password, UserType = u.UserType.ToString() };
         }
 
-        public async Task<bool> UploadImage(IFormFile imageFile, Guid id)
+        public async Task<bool> UploadImage(IFormFile imageFile, string userImage)
         {
             try
             {
-                var t = Path.GetExtension(imageFile.FileName);
-                var tt = id.ToString();
-                var filePath = Path.Combine("Images", id.ToString() + Path.GetExtension(imageFile.FileName));
+                var filePath = Path.Combine("Images", userImage + Path.GetExtension(imageFile.FileName));
                 using (var stream = new FileStream(filePath, FileMode.Create))
                 {
                     await imageFile.CopyToAsync(stream);
@@ -104,7 +104,7 @@ namespace OnlineStore.Services
             }
             catch
             {
-                return new byte[0];
+                return Array.Empty<byte>();
             }
         }
 
@@ -135,7 +135,7 @@ namespace OnlineStore.Services
             }
         }
 
-        public string Login(UserLoginDto dto)
+        public AuthDto Login(UserLoginDto dto)
         {
             User user = new User { Username = dto.Username, Password = dto.Password };
 
@@ -167,7 +167,9 @@ namespace OnlineStore.Services
                     signingCredentials: signinCredentials //kredencijali za potpis
                 );
                 string tokenString = new JwtSecurityTokenHandler().WriteToken(tokeOptions);
-                return tokenString;
+                AuthDto authDTO = _mapper.Map<AuthDto>(user);
+                authDTO.Token = tokenString;
+                return authDTO;
             }
             else
             {
@@ -220,9 +222,7 @@ namespace OnlineStore.Services
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 Email = user.Email,
-                Address = user.Address,
-                Picture = user.ImageUrl
-
+                Address = user.Address
             };
             return authResponse;
 
