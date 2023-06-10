@@ -1,37 +1,46 @@
 import { RegisterUser, AddImage } from "../services/UserService";
 import React, { useState, useRef } from "react";
+import { useNavigate } from 'react-router-dom';
+
 
 export default function Register() {
+    const navigate = useNavigate();
+
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [password2, setPassword2] = useState('');
     const [firstname, setName] = useState('');
     const [lastname, setLastname] = useState('');
     const [email, setEmail] = useState('');
     const [address, setAddress] = useState('');
     const [imageUrl, setImageUrl] = useState("");
+
     const [file, setFile] = useState(null);
     const handleInputChanges = e => {
         const { name, value } = e.target
         if (name === "username") {
             setUsername(value);
         }
-        if (name === "password") {
+        else if (name === "password") {
             setPassword(value);
         }
-        if (name === "firstname") {
+        else if (name === "password2") {
+            setPassword2(value);
+        }
+        else if (name === "firstname") {
             setName(value);
         }
-        if (name === "lastname") {
+        else if (name === "lastname") {
             setLastname(value);
         }
-        if (name === "email") {
+        else if (name === "email") {
             setEmail(value);
         }
 
-        if (name === "address") {
+        else if (name === "address") {
             setAddress(value);
         }
-        if (name === "uloga") {
+        else if (name === "uloga") {
             setAddress(value);
         }
     }
@@ -44,15 +53,16 @@ export default function Register() {
             console.log(dateInputRef.current.value);
             console.log(username + "/" + password + "/" + firstname + "/" + email + "/" + address + "/" + dateInputRef.current.value + "/" + uloga.current.value);
 
-            const values = { Username: username, Password: password, FirstName: firstname, LastName: lastname, Email: email, Address: address, UserType: uloga.current.value, DateOfBirth: dateInputRef.current.value, ImageUrl: 'id' };
+            const values = { Username: username, Password: password, FirstName: firstname, LastName: lastname, Email: email, Address: address, UserType: uloga.current.value, DateOfBirth: dateInputRef.current.value, ImageUrl: imageUrl };
             const resp = await RegisterUser(values);
             console.log(resp);
 
             if (file != null) {
                 const response = AddImage(file, resp.data.username);
-                const test = response;
                 console.log(response);
             }
+
+            navigate('/login');
 
         }
     }
@@ -74,6 +84,11 @@ export default function Register() {
 
         if (!password) {
             passwordError = "Password field is required";
+            alert(passwordError)
+        }
+
+        else if (password !== password2) {
+            passwordError = "Your paswords don't match!";
             alert(passwordError)
         }
 
@@ -106,12 +121,11 @@ export default function Register() {
     function handleFileSelect(event) {
         const file = event.target.files[0];
         console.log(file);
-        setImageUrl(file);
         const formData = new FormData();
         formData.append("image", file);
         // send formData to the server
         setFile(formData);
-        setImageUrl(file)
+        setImageUrl(file.name);
     }
 
 
@@ -119,32 +133,48 @@ export default function Register() {
         <div className="jumbotron text-center">
             <h3>Register new user:</h3><br /><br />
             <form onSubmit={register}>
-                Username : <input type={"text"} name='username' value={username} onChange={handleInputChanges}  ></input><br /><br />
+                <div className="row">
+                    <div className="col">
+                        <input placeholder="Username" type={"text"} name='username' value={username} onChange={handleInputChanges}  ></input><br /><br />
+                    </div>
+                    <div className="form-group">
+                        <input placeholder="Password" type={"password"} name='password' value={password} onChange={handleInputChanges}></input><br /><br />
+                    </div>
+                    <div className="form-group">
+                        <input placeholder="Password" type="password" name='password2' value={password2} onChange={handleInputChanges}></input><br /><br />
+                    </div>
+                    <div className="form-group">
+                        <input placeholder="First name" type="text" name='firstname' value={firstname} onChange={handleInputChanges}  ></input><br /><br />
+                    </div>
+                    <div className="form-group">
+                        <input placeholder="Last name" type="text" name='lastname' value={lastname} onChange={handleInputChanges}  ></input><br /><br />
+                    </div>
+                    <div className="form-group">
+                        <input placeholder="Email" type="text" name='email' value={email} onChange={handleInputChanges}  ></input><br /><br />
+                    </div>
+                    <div className="form-group"> <input placeholder="Date of Birth" type="date" name="date" ref={dateInputRef}></input><br /><br />
+                    </div>
+                    <div className="form-group">
+                        <input placeholder="Address" type="text" name="address" value={address} onChange={handleInputChanges} ></input><br /><br />
+                    </div>
+                    <div className="form-group">
+                        <select placeholder="User Type" ref={uloga} >
+                            <option value={'Customer'}>Customer</option>
+                            <option value={'Merchant'}>Merchnat</option>
+                            <option value={'Admin'}>Admin</option>
+                        </select><br /><br />
+                    </div>
+                    <div className="form-group">
+                        <input placeholder="Image" type="file" onChange={handleFileSelect} />
+                    </div><br /><br />
 
-                Password: <input type={"password"} name='password' value={password} onChange={handleInputChanges}></input><br /><br />
-
-                Name : <input type={"text"} name='firstname' value={firstname} onChange={handleInputChanges}  ></input><br /><br />
-
-                Lastname : <input type={"text"} name='lastname' value={lastname} onChange={handleInputChanges}  ></input><br /><br />
-
-                Email : <input type={"text"} name='email' value={email} onChange={handleInputChanges}  ></input><br /><br />
-
-                Date of Birth : <input type={"date"} name="date" ref={dateInputRef}></input><br /><br />
-
-                Address : <input type={"text"} name="address" value={address} onChange={handleInputChanges} ></input><br /><br />
-
-                Role : <select ref={uloga} >
-                    <option value={'Customer'}>Customer</option>
-                    <option value={'Merchant'}>Merchant</option>
-                </select><br /><br />
-
-                Image: <input type="file" onChange={handleFileSelect} />
-                {imageUrl && <img src={URL.createObjectURL(imageUrl)} height={300} width={300} alt="" />}<br /><br />
-
-                <input type={"submit"} name='registruj' value={"Register"} onChange={handleInputChanges} className="btn btn-primary"></input><br />
-            </form>
+                    <div className="form-group">
+                    <input type={"submit"} name='registruj' value={"Register"} onChange={handleInputChanges} className="btn btn-primary"></input><br />
+                    </div>
+                </div>
+            </form >
             <br />
-        </div>
+        </div >
     )
 
 }

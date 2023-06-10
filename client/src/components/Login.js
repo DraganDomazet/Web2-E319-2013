@@ -1,9 +1,6 @@
 import React, { useState } from "react";
 import { Login } from "../services/UserService";
-import Register from "./Register";
-import * as ReactDOMClient from 'react-dom/client';
 import { useNavigate } from 'react-router-dom';
-
 
 export default function LogIn() {
     const navigate = useNavigate();
@@ -28,7 +25,7 @@ export default function LogIn() {
             const values = { Username: username, Password: password };
             const resp = await Login(values);
             console.log(resp);
-            navigate('homepage', { state: { user: resp.data }});
+            navigate('homepage', { state: { user: resp.data } });
 
         }
     }
@@ -50,27 +47,32 @@ export default function LogIn() {
         }
         return true;
     }
-    const register =  e => {
-
-        e.preventDefault();
-        const container = document.getElementById('root');
-        const root = ReactDOMClient.createRoot(container);
-        root.render(<Register></Register>);
-    }
 
     return (
-        <div className="jumbotron text-center">
-            <h2 className="bg-info">Please, log in :)</h2><br /><br />
-                <form onSubmit={login} >
-                    <label> Username : </label>&nbsp;<input type={"text"} name='username' value={username} onChange={handleInputChanges}  ></input><br /><br />
-
-                    <label> Password : </label>&nbsp;<input type={"password"} name='password' value={password} onChange={handleInputChanges}></input><br /><br />
-
-                <input type={"submit"} name='uloguj' value={"Log in"} onChange={handleInputChanges} className="btn btn-primary"></input><br />
-                </form>
-                <br />
-            <input type={"submit"} name='registruj' value={"Register"} onClick={register} className="btn btn-primary"></input>
-                <br />
-        </div>
+        <div>
+            <div className="row mx-auto col-10 col-md-8 col-lg-6">
+                <h2 className={'text-center'}>Please, log in :)</h2><br /><br />
+                <form className="row text-center" onSubmit={login} >
+                    <div className="row">
+                        <div className="col">
+                            <input placeholder="Username" className="form-control" type="text" name='username' value={username} onChange={handleInputChanges} ></input><br /><br />
+                        </div>
+                        <div className="col">
+                            <input placeholder="Password" className="form-control" type="password" name='password' value={password} onChange={handleInputChanges}></input><br /><br />
+                        </div>
+                        <div className="col">
+                            <input type="submit" name='uloguj' value="Log in" onChange={handleInputChanges} className="btn btn-primary"></input><br />
+                        </div>
+                    </div>
+                </form >
+                <div className="col">
+                <button className="btn btn-outline-primary">
+                    <a href='/register'>Create new account</a>
+                </button>
+            </div>
+            </div>
+            
+            <br />
+        </div >
     )
 }

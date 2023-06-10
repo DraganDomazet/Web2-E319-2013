@@ -123,7 +123,7 @@ namespace OnlineStore.Services
             user.ImageUrl = dto.UserImage;
             if (dto.Password != "")
             {
-                user.Password = dto.Password;
+                user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
             }
             User u = _userRepository.UpdateUser(user);
             if (u == null)

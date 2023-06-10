@@ -38,7 +38,7 @@ namespace OnlineStore.Api.Controllers
         }
 
         [HttpGet("get-user/{id}")]
-        [Authorize(Roles = "user")]
+        //[Authorize(Roles = "user")]
         public IActionResult GetUser(Guid id)
         {
             // long id = Int64.Parse(ids);
@@ -61,7 +61,7 @@ namespace OnlineStore.Api.Controllers
         }
 
         [HttpPut("update")]
-        [Authorize(Roles = "user")]
+        //[Authorize(Roles = "user")]
         public IActionResult Edit([FromBody] UserUpdateDto userDto)
         {
             return Ok(_userService.UpdateUser(userDto));
