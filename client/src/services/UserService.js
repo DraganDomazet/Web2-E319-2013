@@ -1,11 +1,14 @@
 import axios from 'axios'
-import { urlLogin } from '../endpoints';
-import { urlRegister } from '../endpoints';
-import { urlUpdateUser } from '../endpoints';
-import { urlGetUser } from '../endpoints';
+import { urlLogin, urlRegister, urlUpdateUser, urlGetUser, urlGetMerchantsRequests } from '../endpoints';
+import { urlVerify, urluploadImage, urlDecline, urlImage, urlFacebookLogin } from '../endpoints';
+
 
 export const Login = async (UserLoginDto) => {
     return await axios.post(urlLogin, UserLoginDto);
+}
+
+export const Facebook = async (UserLoginDto) => {
+    return await axios.post(urlFacebookLogin, UserLoginDto);
 }
 
 export const RegisterUser = async (UserDto) => {
@@ -16,10 +19,26 @@ export const UpdateUserProfile = async (UserUpdateDto) => {
     return await axios.put(urlUpdateUser, UserUpdateDto)
 }
 
-export const GetUser = async (id) => {
-    return await axios.get(urlGetUser + `/${id}`);
+export const GetUser = async (id, config) => {
+    return await axios.get(urlGetUser + `/${id}`, config);
 }
 
 export const AddImage = async (File, id) => {
-    return await axios.post(`${process.env.REACT_APP_API_URL}/api/users/upload-image/${id}`, File);
+    return await axios.post(urluploadImage + `/${id}`, File);
 }
+
+export const GetMerchants = async (config) => {
+    return await axios.get(urlGetMerchantsRequests, config);
+}
+
+export const Verificate = async (UserDto, config) => {
+    return await axios.put(urlVerify, UserDto, config);
+}
+
+export const Decline = async (User, config) => {
+    return await axios.post(urlDecline, User, config);
+}
+
+export const GetImage = (id) => {
+    return urlImage + `/${id}`;
+};

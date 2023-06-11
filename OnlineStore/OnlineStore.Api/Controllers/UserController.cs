@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using OnlineStore.Dto;
 using OnlineStore.Services.Interfaces;
 using System.Data;
+using System.Security.Claims;
 
 namespace OnlineStore.Api.Controllers
 {
@@ -38,18 +39,18 @@ namespace OnlineStore.Api.Controllers
         }
 
         [HttpGet("get-user/{id}")]
-        //[Authorize(Roles = "user")]
+        [Authorize(Roles = "user")]
         public IActionResult GetUser(Guid id)
         {
             // long id = Int64.Parse(ids);
             return Ok(_userService.GetUser(id));
         }
 
-        [HttpGet("get-image/{id}")]
-        public IActionResult GetImage(Guid id)
+        [HttpGet("get-image/{imageName}")]
+        public IActionResult GetImage(string imageName)
         {
 
-            var imagesbytes = _userService.GetImage(id);
+            var imagesbytes = _userService.GetImage(imageName);
             if (imagesbytes.Length == 1)
             {
                 return NotFound();
@@ -80,19 +81,24 @@ namespace OnlineStore.Api.Controllers
         }
 
         [HttpPut("verify")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "admin")]
         public IActionResult Verify([FromBody] UserUpdateDto userUpdateDto)
         {
             return Ok(_userService.Verify(userUpdateDto));
         }
 
+        [HttpPost("decline")]
+        [Authorize(Roles = "admin")]
+        public IActionResult DeclineVerification([FromBody] UserUpdateDto userUpdateDto)
+        {
+            _userService.DeclineVerification(userUpdateDto);
+            return Ok();
+        }
 
-        /// <summary>
-        /// Test
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet("check-verification")]
-        [Authorize(Roles = "Admin")]
+
+
+        [HttpGet("get-merchants")]
+        [Authorize(Roles = "admin")]
         public IActionResult GetRequested()
         {
             return Ok(_userService.GetUnverifiedMerchants());

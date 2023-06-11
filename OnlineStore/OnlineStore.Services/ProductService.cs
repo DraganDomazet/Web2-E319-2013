@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using OnlineStore.Dto;
 using OnlineStore.Models.Models;
 using OnlineStore.Repository.Interfaces;
@@ -38,6 +39,23 @@ namespace OnlineStore.Services
             Product product = _productRepository.GetProductById(Id);
             ProductUpdateDto productUpdateDto = _mapper.Map<ProductUpdateDto>(product);
             return productUpdateDto;
+        }
+
+        public async Task<bool> UploadImage(IFormFile imageFile, string userImage)
+        {
+            try
+            {
+                var filePath = Path.Combine("Products", userImage + Path.GetExtension(imageFile.FileName));
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await imageFile.CopyToAsync(stream);
+                }
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }

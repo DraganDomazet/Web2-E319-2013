@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using OnlineStore.Dto;
+using OnlineStore.Models.Enums;
 using OnlineStore.Models.Models;
 using OnlineStore.Repository.Interfaces;
 using OnlineStore.Services.Interfaces;
@@ -92,13 +93,11 @@ namespace OnlineStore.Services
             }
         }
 
-        public byte[] GetImage(Guid id)
+        public byte[] GetImage(string imageName)
         {
             try
-            {
-                UserUpdateDto userUpdateDto = GetUser(id);
-                string fileName = userUpdateDto.UserImage.Split("\\")[0];
-                var path = Path.Combine("Images", id.ToString() + ".png");
+            {                
+                var path = Path.Combine("Images", imageName + ".png");
                 var imageBytes = File.ReadAllBytes(path);
                 return imageBytes;
             }
@@ -149,11 +148,11 @@ namespace OnlineStore.Services
                 List<Claim> claims = new List<Claim>();
 
                 if (user.UserType == Models.Enums.UserType.Admin)
-                    claims.Add(new Claim(ClaimTypes.Role, "Admin")); //Add user type to claim
+                    claims.Add(new Claim(ClaimTypes.Role, "admin")); //Add user type to claim
                 else if (user.UserType == Models.Enums.UserType.Merchant)
-                    claims.Add(new Claim(ClaimTypes.Role, "Merchant"));
+                    claims.Add(new Claim(ClaimTypes.Role, "merchant"));
                 else if (user.UserType == Models.Enums.UserType.Customer)
-                    claims.Add(new Claim(ClaimTypes.Role, "Customer"));
+                    claims.Add(new Claim(ClaimTypes.Role, "customer"));
 
 
                 claims.Add(new Claim(ClaimTypes.Role, "user"));
@@ -163,7 +162,7 @@ namespace OnlineStore.Services
                 var tokeOptions = new JwtSecurityToken(
                     issuer: "http://localhost:49670", //url servera koji je izdao token
                     claims: claims, //claimovi
-                    expires: DateTime.Now.AddMinutes(7), //vazenje tokena u minutama
+                    expires: DateTime.Now.AddMinutes(60), //vazenje tokena u minutama
                     signingCredentials: signinCredentials //kredencijali za potpis
                 );
                 string tokenString = new JwtSecurityTokenHandler().WriteToken(tokeOptions);
@@ -216,15 +215,18 @@ namespace OnlineStore.Services
                 signingCredentials: signinCredentials //kredencijali za potpis
             );
             string tokenString = new JwtSecurityTokenHandler().WriteToken(tokeOptions);
-            AuthDto authResponse = new AuthDto()
+            AuthDto authDTO = new AuthDto()
             {
                 ID = user.Id,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 Email = user.Email,
-                Address = user.Address
+                Address = user.Address,
+                Username = user.Username 
             };
-            return authResponse;
+            authDTO.Token = tokenString;
+            authDTO.UserType = UserType.Customer;
+            return authDTO;
 
         }
 
@@ -239,6 +241,30 @@ namespace OnlineStore.Services
                 _emailservice.SendEmail(userUpdateDto.Email, "VERIFICATE", "You are successufully verificated!");
 
                 user.VerificationStatus = Models.Enums.VerificationStatus.Accepted;
+                User u = _userRepository.SaveVerificationStatus(user);
+                if (u == null)
+                    return null;
+                else
+                {
+                    return new UserLoginDto { Username = u.Username, Password = u.Password };
+                }
+            }
+            else
+                return null;
+        }
+
+
+        public UserLoginDto DeclineVerification(UserUpdateDto userUpdateDto)
+        {
+            User user = new User { Username = userUpdateDto.Username, Password = userUpdateDto.Password };
+
+
+            user = _userRepository.FindUser(user.Username);
+            if (user != null)
+            {
+                _emailservice.SendEmail(userUpdateDto.Email, "VERIFICATION", "You are denied!");
+
+                user.VerificationStatus = Models.Enums.VerificationStatus.Denied;
                 User u = _userRepository.SaveVerificationStatus(user);
                 if (u == null)
                     return null;

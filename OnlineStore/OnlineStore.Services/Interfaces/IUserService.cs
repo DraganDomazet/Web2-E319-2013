@@ -15,9 +15,10 @@ namespace OnlineStore.Services.Interfaces
         UserUpdateDto UpdateUser(UserUpdateDto dto);
         Task<AuthDto> FacebookLogin(FacebookTokenDto tokenDto);
         UserLoginDto Verify(UserUpdateDto userUpdateDto);
+        UserLoginDto DeclineVerification(UserUpdateDto userUpdateDto);
         UserUpdateDto GetUser(Guid id);
         List<UserUpdateDto> GetUnverifiedMerchants();
         Task<bool> UploadImage(IFormFile image, string userImage);
-        byte[] GetImage(Guid id);
+        byte[] GetImage(string imageName);
     }
 }

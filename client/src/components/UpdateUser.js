@@ -1,4 +1,4 @@
-import { UpdateUserProfile, AddImage, GetUser } from "../services/UserService";
+import { UpdateUserProfile, AddImage, GetUser, GetImage } from "../services/UserService";
 import React, { useState, useEffect } from "react";
 import { useLocation } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
@@ -23,6 +23,10 @@ export default function UpdateUser() {
         fillFields();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    const config = {
+        headers: { Authorization: 'Bearer ' + localStorage.getItem('token' + location.state.user.id) }
+    };
 
     const handleInputChanges = e => {
         const { name, value } = e.target
@@ -54,26 +58,24 @@ export default function UpdateUser() {
     }
 
     const fillFields = async (e) => {
-        const response = await GetUser(location.state.user.id);
+        const response = await GetUser(location.state.user.id, config);
+        const image = await GetImage(location.state.user.username);
+        setImageUrl(image);
+
         const user = response.data;
+        console.log("radi!!!");
+
         console.log(user);
         setUsername(user.username);
 
         setAddress(user.address);
         setEmail(user.email);
         setId(user.id);
-        console.log(user.dateOfBirth);
-        console.log();
-        var date = (user.dateOfBirth + "").split('T')[0];
+        let date = (user.dateOfBirth + "").split('T')[0];
         setDateOfBirth(date);
-
-
         setFirstName(user.firstName);
         setLastName(user.firstName);
 
-        setImageUrl(localStorage.getItem('url' + location.state.user.id));
-        console.log("image")
-        console.log(localStorage.getItem('url' + location.state.user.id))
     }
 
     let validationError = "";
@@ -144,14 +146,12 @@ export default function UpdateUser() {
     function handleFileSelect(event) {
         const file = event.target.files[0];
         console.log(file);
-        setImageUrl(file);
         const formData = new FormData();
         formData.append("image", file);
         // send formData to the server
         setFile(formData);
-        setImageUrl(file.name)
+        setImageUrl(URL.createObjectURL(file));
     }
-
 
     return (
         <div className="jumbotron text-center">
@@ -184,6 +184,7 @@ export default function UpdateUser() {
                     </div>
                     <div className="form-group">
                         Image: <br/><input placeholder="Image" type="file" onChange={handleFileSelect} />
+                        <img src={imageUrl} height={150} width={150} alt=""/>
                     </div><br /><br /><br />
 
                     <div className="form-group">

@@ -1,7 +1,4 @@
-import { useNavigate } from 'react-router-dom';
-import { useLocation } from 'react-router-dom';
-
-
+import { useNavigate, useLocation } from 'react-router-dom';
 
 export default function CustomerPage(props) {
     const location = useLocation();
@@ -13,7 +10,7 @@ export default function CustomerPage(props) {
     return (
 
 
-        <div>
+        <div className="row mx-auto col-10 col-md-8 col-lg-6">
             <h1>You logged in as {location.state.user.username}!</h1>
             <nav className="navbar">  <div className="container-fluid">
                 <ul className="list-inline">

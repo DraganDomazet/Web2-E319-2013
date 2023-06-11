@@ -1,4 +1,5 @@
-﻿using OnlineStore.Dto;
+﻿using Microsoft.AspNetCore.Http;
+using OnlineStore.Dto;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,5 +12,7 @@ namespace OnlineStore.Services.Interfaces
     {
         ProductUpdateDto AddNew(ProductDto productDto);
         ProductUpdateDto GetProductById(Guid id);
+        Task<bool> UploadImage(IFormFile image, string userImage);
+
     }
 }

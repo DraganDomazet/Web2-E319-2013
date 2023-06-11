@@ -40,20 +40,20 @@ export default function Register() {
         else if (name === "address") {
             setAddress(value);
         }
-        else if (name === "uloga") {
+        else if (name === "userType") {
             setAddress(value);
         }
     }
-    const uloga = useRef();
+    const userType = useRef();
     const dateInputRef = useRef(null);
     const register = async e => {
 
         e.preventDefault();
         if (validate()) {
             console.log(dateInputRef.current.value);
-            console.log(username + "/" + password + "/" + firstname + "/" + email + "/" + address + "/" + dateInputRef.current.value + "/" + uloga.current.value);
+            console.log(username + "/" + password + "/" + firstname + "/" + email + "/" + address + "/" + dateInputRef.current.value + "/" + userType.current.value);
 
-            const values = { Username: username, Password: password, FirstName: firstname, LastName: lastname, Email: email, Address: address, UserType: uloga.current.value, DateOfBirth: dateInputRef.current.value, ImageUrl: imageUrl };
+            const values = { Username: username, Password: password, FirstName: firstname, LastName: lastname, Email: email, Address: address, UserType: userType.current.value, DateOfBirth: dateInputRef.current.value, ImageUrl: imageUrl };
             const resp = await RegisterUser(values);
             console.log(resp);
 
@@ -62,7 +62,7 @@ export default function Register() {
                 console.log(response);
             }
 
-            navigate('/login');
+            navigate('/login', { state: { info: userType.current.value } });
 
         }
     }
@@ -158,7 +158,7 @@ export default function Register() {
                         <input placeholder="Address" type="text" name="address" value={address} onChange={handleInputChanges} ></input><br /><br />
                     </div>
                     <div className="form-group">
-                        <select placeholder="User Type" ref={uloga} >
+                        <select placeholder="User Type" ref={userType} >
                             <option value={'Customer'}>Customer</option>
                             <option value={'Merchant'}>Merchnat</option>
                             <option value={'Admin'}>Admin</option>

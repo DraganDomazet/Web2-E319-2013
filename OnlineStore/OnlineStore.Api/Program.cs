@@ -78,12 +78,6 @@ builder.Services.AddAuthentication(opt =>
                };
            });
 
-builder.Services.AddAuthentication().AddFacebook(opt =>
-    {
-        opt.AppId = builder.Configuration["FacebookAuthSettings:clientId"];
-        opt.AppSecret = builder.Configuration["FacebookAuthSettings:clientSecret"];
-    }
-);
 
 builder.Services.AddCors(options =>
 {
@@ -99,11 +93,8 @@ builder.Services.AddCors(options =>
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("user", policy => policy.RequireClaim("user")); //Ovde mozemo kreirati pravilo za validaciju nekog naseg claima
-});
+    options.AddPolicy("admin", policy => policy.RequireClaim("admin")); //Ovde mozemo kreirati pravilo za validaciju nekog naseg claima
 
-builder.Services.AddAuthorization(options =>
-{
-    options.AddPolicy("user", policy => policy.RequireClaim("user")); //Ovde mozemo kreirati pravilo za validaciju nekog naseg claima
 });
 
 builder.Services.AddScoped<IAuthService, AuthService>();

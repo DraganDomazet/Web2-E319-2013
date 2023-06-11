@@ -1,9 +1,22 @@
 import React, { useState } from "react";
-import { Login } from "../services/UserService";
-import { useNavigate } from 'react-router-dom';
+import { Login, Facebook } from "../services/UserService";
+import { useNavigate, useLocation } from 'react-router-dom';
+
+import { LoginSocialFacebook } from "reactjs-social-login";
+import { FacebookLoginButton } from "react-social-login-buttons";
+
+
 
 export default function LogIn() {
+    const location = useLocation();
     const navigate = useNavigate();
+
+    let info = "";
+    if (location.state !== null) {
+        info = location.state.info;
+    }
+
+
 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
@@ -17,6 +30,23 @@ export default function LogIn() {
         }
     }
 
+    // const googleLogin = async (response) => {
+    //     const LogObject = { Token: response.tokenId }
+    //     const logresp = await Google(LogObject);
+    //     console.log(logresp)
+    //     if (logresp.data.logedIn === true) {
+    //         localStorage.setItem('token' + logresp.data.user.id, logresp.data.token);
+    //     }
+    // }
+
+    // const responseGoogle = (response) => {
+    //     console.log(response);
+    //     // Send the access token to your backend
+    //     googleLogin(response);
+    // }
+
+
+
     const login = async e => {
 
         e.preventDefault();
@@ -24,8 +54,11 @@ export default function LogIn() {
 
             const values = { Username: username, Password: password };
             const resp = await Login(values);
+            if (resp.data.token && resp.data.id) {
+                localStorage.setItem('token' + resp.data.id, resp.data.token)
+            }
             console.log(resp);
-            navigate('homepage', { state: { user: resp.data } });
+            navigate('/homepage', { state: { user: resp.data } });
 
         }
     }
@@ -48,10 +81,20 @@ export default function LogIn() {
         return true;
     }
 
+    const fbLogin = async (token) => {
+        const fbresp = await Facebook({Token: token});
+        console.log(fbresp);
+        navigate('/homepage', { state: { user: fbresp.data } });
+
+    }
+
     return (
         <div>
             <div className="row mx-auto col-10 col-md-8 col-lg-6">
-                <h2 className={'text-center'}>Please, log in :)</h2><br /><br />
+                <h2>
+                    {info === 'Merchant' ? "You sent a request for validation" : ""}
+                </h2>
+                <h2 className={'text-center'}>Please, log in</h2><br /><br />
                 <form className="row text-center" onSubmit={login} >
                     <div className="row">
                         <div className="col">
@@ -63,15 +106,29 @@ export default function LogIn() {
                         <div className="col">
                             <input type="submit" name='uloguj' value="Log in" onChange={handleInputChanges} className="btn btn-primary"></input><br />
                         </div>
+                        <div className="col"><LoginSocialFacebook
+                            appId={process.env.REACT_APP_CLIENT_ID}
+                            onResolve={(response) => {
+                                console.log(response);
+                                fbLogin(response.data.accessToken);
+                            }}
+                            onReject={(error) => {
+                                console.log(error);
+                            }}
+                        >
+                            <FacebookLoginButton />
+                        </LoginSocialFacebook></div>
                     </div>
                 </form >
                 <div className="col">
-                <button className="btn btn-outline-primary">
-                    <a href='/register'>Create new account</a>
-                </button>
+                    <button className="btn btn-outline-primary">
+                        <a href='/register'>Create new account</a>
+                    </button>
+                </div>
+                <div className="col">
+                </div>
             </div>
-            </div>
-            
+
             <br />
         </div >
     )

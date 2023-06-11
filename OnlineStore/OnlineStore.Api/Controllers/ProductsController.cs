@@ -20,7 +20,7 @@ namespace OnlineStore.Api.Controllers
         }
 
         [HttpPost("add")]
-        [Authorize(Roles = "Merchant")]
+        [Authorize(Roles = "merchant")]
         public IActionResult AddProduct([FromBody] ProductDto productDto)
         {
             return Ok(_productService.AddNew(productDto));
@@ -31,6 +31,21 @@ namespace OnlineStore.Api.Controllers
         public IActionResult GetProductById(Guid id)
         {
             return Ok(_productService.GetProductById(id));
+        }
+
+        [HttpPost("upload-image/{userImage}")]
+        [Authorize(Roles = "merchant")]
+        public async Task<IActionResult> UploadImage([FromForm] IFormFile image, string userImage)
+        {
+            try
+            {
+                await _productService.UploadImage(image, userImage);
+                return Ok();
+            }
+            catch
+            {
+                return BadRequest();
+            }
         }
 
     }
