@@ -54,15 +54,16 @@ export default function LogIn() {
 
             const values = { Username: username, Password: password };
             const resp = await Login(values);
-            if (resp.data.token && resp.data.id) {
+            if (resp.data.address === "notVerified") {
+                alert("You are not verified yet");
+            }
+            else if (resp.data.token && resp.data.id) {
                 localStorage.setItem('token' + resp.data.id, resp.data.token);
                 navigate('/homepage', { state: { user: resp.data } });
             }
             else {
-                alert("Login failed! Please try again")
+                alert("Login failed! Please try again");
             }
-            
-
         }
     }
     let nameError = "";

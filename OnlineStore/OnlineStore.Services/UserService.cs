@@ -142,6 +142,7 @@ namespace OnlineStore.Services
             user = _userRepository.FindUser(user.Username);
             if (user == null)
                 return null;
+            
 
             if (BCrypt.Net.BCrypt.Verify(dto.Password, user.Password))//Uporedjujemo hes pasvorda iz baze i unetog pasvorda
             {
@@ -166,7 +167,12 @@ namespace OnlineStore.Services
                     signingCredentials: signinCredentials //kredencijali za potpis
                 );
                 string tokenString = new JwtSecurityTokenHandler().WriteToken(tokeOptions);
+                
                 AuthDto authDTO = _mapper.Map<AuthDto>(user);
+                if (user.UserType == UserType.Merchant && user.VerificationStatus != VerificationStatus.Accepted)
+                {
+                    authDTO.Address = "notVerified";
+                }
                 authDTO.Token = tokenString;
                 return authDTO;
             }

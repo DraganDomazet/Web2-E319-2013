@@ -10,6 +10,12 @@ export const urlGetMerchantsRequests = `${baseUrl}/api/users/get-merchants`
 export const urlVerify = `${baseUrl}/api/users/verify`
 export const urlDecline = `${baseUrl}/api/users/decline`
 export const urlImage = `${baseUrl}/api/users/get-image`
+export const urlAddProduct = `${baseUrl}/api/products/add`
+export const urlGetProducts = `${baseUrl}/api/products/get-all`
+export const urlUploadImage = `${baseUrl}/api/products/upload-image`
+export const urlAddOrder = `${baseUrl}/api/products/upload-image`
+export const urlGetOrders = `${baseUrl}/api/orders/get-all-orders`
+
 
 
 
