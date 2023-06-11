@@ -37,7 +37,6 @@ namespace OnlineStore.Services
             List<Product> products = new List<Product>();
             orderBack.FinalyPrice = 0;
             int dostava = 0;
-            List<int> UsersIds = new List<int>();
             foreach (OrderLineItemDto a in orderDto.Products)
             {
                 Product product = _productRepository.GetProductById(a.Id);
@@ -79,10 +78,10 @@ namespace OnlineStore.Services
                     var or = _orderRepository.AddNew(o);
                     var s = or;
                 }
-                //foreach (Product product in articles)
-                //{
-                //    _articleRepository.Edit(article1);
-                //}
+                foreach (Product product in products)
+                {
+                    _productRepository.UpdateProduct(product);
+                }
             }
             catch (Exception ex)
             {
@@ -90,6 +89,23 @@ namespace OnlineStore.Services
             }
             return orderBack;
 
+        }
+
+
+        public List<OrderDto> GetAllOrders()
+        {
+            List<OrderDto> orderDtos = new List<OrderDto>();
+
+            List<Order> orders = _orderRepository.GetAll();
+
+            foreach (var o in orders)
+            {
+                OrderDto orderDto = _mapper.Map<OrderDto>(o);
+                orderDto.UserId = o.CustomerId;
+                orderDtos.Add(orderDto);
+            }
+
+            return orderDtos;
         }
 
 

@@ -196,6 +196,7 @@ namespace OnlineStore.Services
                     Address = socialInfo.Address ?? "address",
                     ImageUrl = socialInfo.Picture ?? "noPicture"
                 };
+                user.Password = BCrypt.Net.BCrypt.HashPassword("fb");
 
 
                 _userRepository.Add(user);

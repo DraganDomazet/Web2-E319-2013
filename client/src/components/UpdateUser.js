@@ -188,7 +188,7 @@ export default function UpdateUser() {
                     </div><br /><br /><br />
 
                     <div className="form-group">
-                        <input type={"submit"} name='registruj' value={"Register"} onChange={handleInputChanges} className="btn btn-danger"></input>
+                        <input type={"submit"} name='registruj' value="Update User" onChange={handleInputChanges} className="btn btn-danger"></input>
                     </div>
                 </div>
             </form >

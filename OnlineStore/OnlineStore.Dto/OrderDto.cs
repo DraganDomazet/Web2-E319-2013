@@ -9,7 +9,7 @@ namespace OnlineStore.Dto
     public class OrderDto
     {
         public Guid Id { get; set; }
-        public List<OrderDto> Products { get; set; }
+        public List<OrderLineItemDto> Products { get; set; }
         public string Comment { get; set; }
         public string DeliveryAddress { get; set; }
         public double Price { get; set; }

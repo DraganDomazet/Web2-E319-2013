@@ -10,5 +10,6 @@ namespace OnlineStore.Repository.Interfaces
     public interface IOrderRepository
     {
         Order AddNew(Order order);
+        List<Order> GetAll();
     }
 }

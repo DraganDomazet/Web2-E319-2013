@@ -7,6 +7,7 @@ import GetMerchantRequests from './components/GetMerchantRequests';
 import NewProduct from './components/NewProduct';
 import AddOrder from './components/AddOrder';
 import CustomerPage from './components/CustomerPage';
+import AllOrders from './components/AllOrders';
 
 
 import { Routes, Route } from 'react-router-dom'
@@ -23,6 +24,8 @@ function App() {
             <Route path="/addproduct" element={<NewProduct />} />
             <Route path="/customerpage" element={<CustomerPage />} />
             <Route path="/addorder" element={<AddOrder />} />
+            <Route path="/allorders" element={<AllOrders />} />
+
 
             
 

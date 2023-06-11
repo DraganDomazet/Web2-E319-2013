@@ -25,5 +25,15 @@ namespace OnlineStore.Repository
 
             return order;
         }
+
+        public List<Order> GetAll()
+        {
+            List<Order> orders = new List<Order>();
+            foreach (Order order in _dbContext.Orders)
+            {
+                orders.Add(order);
+            }
+            return orders;
+        }
     }
 }

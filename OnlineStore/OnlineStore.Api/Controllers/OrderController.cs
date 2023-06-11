@@ -25,5 +25,13 @@ namespace OnlineStore.Api.Controllers
             return Ok(_orderService.AddNew(orderDto));
         }
 
+        [HttpGet("get-all-orders")]
+        [Authorize(Roles = "admin")]
+        public IActionResult GetAll()
+        {
+            return Ok(_orderService.GetAllOrders());
+        }
+
+
     }
 }

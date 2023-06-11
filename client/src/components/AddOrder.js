@@ -13,6 +13,7 @@ export default function NewOrder() {
     const [address, setAddress] = useState('');
     const [comment, setComment] = useState('');
     const [am, setAm] = useState(0);
+    const [cartInfo, setCartInfo] = useState('Cart is empty!');
 
 
 
@@ -85,7 +86,7 @@ export default function NewOrder() {
                 console.log("Successfully!!!");
                 console.log(resp.data);
                 tableArticles();
-                navigate("/homepage", { state: { user: location.state.user } })
+                navigate("/homepage", { state: { user: location.state.user, order: true } })
             }
         }
 
@@ -102,13 +103,15 @@ export default function NewOrder() {
             const ArticleNew = { id: element.id, name: element.name, IndividualPrice: element.individualPrice, amount: am, description: element.description, ProductImageUrl: element.productImageUrl, merchantID: location.state.user.id }
             list.push(ArticleNew);
             setList(list);
+            setCartInfo("You have added " + listOfArticles.length + " products to cart");
             console.log(listOfArticles);
+            return true;
         }
-        if (validationError) {
-            return false;
+        else {
+            validationError = "Amount of available products is exceeded!";
+            alert(validationError);
         }
         
-        return true;
     }
 
     const addOnList = (event, element) => {
@@ -148,11 +151,11 @@ export default function NewOrder() {
                     </tbody>
                 </table>
                 <br /><br />
-                {/* <div><h2>{orderText}</h2></div> */}
-                
+                <div><h2 style={{ color: `red` }}>{cartInfo}</h2></div>
+
                 <div className="mb-3"><input className="form-control" placeholder="Address" type={"text"} name='address' value={address} onChange={handleInputChanges} ></input></div><br />
                 <div><input className="form-control" placeholder="Comment" type={"text"} name='comment' value={comment} onChange={handleInputChanges} ></input></div><br />
-                <input type={"submit"} className="btn btn-outline-danger" name='poruci' value={"Create Order"} onClick={createOrder}></input><br />
+                <input type={"submit"} className="btn btn-outline-success" name='poruci' value={"Create Order"} onClick={createOrder}></input><br />
             </div>
 
 

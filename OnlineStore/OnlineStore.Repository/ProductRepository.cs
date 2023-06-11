@@ -23,6 +23,14 @@ namespace OnlineStore.Repository
             _dbContext.SaveChanges();
             return product;
         }
+
+        public Product UpdateProduct(Product product)
+        {
+            _dbContext.Products.Update(product);
+            _dbContext.SaveChanges();
+            return product;
+        }
+
         public Product GetProductById(Guid id)
         {
             return _dbContext.Products.SingleOrDefault<Product>(u => u.Id == id);

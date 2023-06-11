@@ -10,6 +10,7 @@ namespace OnlineStore.Repository.Interfaces
     public interface IProductRepository
     {
         Product AddNew(Product product);
+        Product UpdateProduct(Product product);
         Product GetProductById(Guid id);
         List<Product> GetAll();
 

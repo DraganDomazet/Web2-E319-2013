@@ -13,23 +13,27 @@ export default function CustomerPage(props) {
     const handleClick2 = async e => {
         navigate('/getmerchants', { state: { user: location.state.user } });
     }
+
+    const showOrders = async e => {
+        navigate('/allorders', { state: { user: location.state.user } });
+    }
     return (
 
 
-        <div>
+        <div className="jumbotron text-center">
             <h1>You logged in as Administrator {location.state.user.username}!</h1>
-            <nav className="navbar">  <div className="container-fluid">
-                <ul className="list-inline">
+            <ul className="list-group">
+                <li className='list-group-item'>
+                    <button className="btn btn-outline-danger custom" onClick={handleClick}>Update profile</button>
+                </li>
+                <li className='list-group-item'>
+                    <button className="btn btn-outline-dark custom" onClick={handleClick2}>Get Merchants Requests</button>
+                </li>
+                <li className='list-group-item'>
+                    <button className="btn btn-outline-success custom" onClick={showOrders}>Show all orders</button>
+                </li>
 
-                    <li>
-                        <button className="btn btn-info" onClick={handleClick}>Update profile</button>
-                    </li>
-                    <li>
-                        <button className="btn btn-info" onClick={handleClick2}>Get Merchants Requests</button>
-                    </li>
-                    
-                </ul></div>
-            </nav>
+            </ul>
         </div>
     )
 }

@@ -10,6 +10,6 @@ namespace OnlineStore.Services.Interfaces
     public interface IOrderService
     {
         OrderReturnDto AddNew(OrderListDto orderDto);
-
+        List<OrderDto> GetAllOrders();
     }
 }
