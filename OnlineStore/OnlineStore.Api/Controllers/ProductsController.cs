@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OnlineStore.Dto;
+using OnlineStore.Services;
 using OnlineStore.Services.Interfaces;
 using System.Data;
 
@@ -47,6 +48,29 @@ namespace OnlineStore.Api.Controllers
                 return BadRequest();
             }
         }
+
+        [HttpGet("get-all")]
+        [Authorize(Roles = "user")]
+        public IActionResult GetAll()
+        {
+            return Ok(_productService.GetAll());
+        }
+
+        [HttpGet("get-image/{imageName}")]
+        public IActionResult GetImage(string imageName)
+        {
+
+            var imagesbytes = _productService.GetImage(imageName);
+            if (imagesbytes.Length == 1)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return File(imagesbytes, "image/jpeg");
+            }
+        }
+
 
     }
 }

@@ -8,14 +8,14 @@ import { Routes, Route } from 'react-router-dom'
 export default function HomePage() {
     const location = useLocation();
 
-    if (location.state.user.userType === 2) {
+    if (location.state.user.userType === 'Customer' || location.state.user.userType === 2) {
         return (
             <Routes>
                 <Route path="/" element={<CustomerPage user={location.state.user} />} />
             </Routes>
         )
     }
-    else if (location.state.user.userType === 0) {
+    else if (location.state.user.userType === 'Admin' || location.state.user.userType === 0) {
         return (
             <Routes>
                 <Route path="/" element={<AdminPage user={location.state.user} />} />
@@ -23,7 +23,7 @@ export default function HomePage() {
         )
     }
 
-    else if (location.state.user.userType === 1) {
+    else if (location.state.user.userType === 'Merchant' || location.state.user.userType === 1) {
         return (
             <Routes>
                 <Route path="/" element={<MerchantPage user={location.state.user} />} />

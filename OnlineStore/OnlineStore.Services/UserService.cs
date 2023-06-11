@@ -61,7 +61,7 @@ namespace OnlineStore.Services
 
             user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
             User u = _userRepository.Add(user);
-            return new UserUpdateDto {Id = u.Id, Username = u.Username, Address = u.Address, DateOfBirth = u.DateOfBirth, Email = u.Email, FirstName = u.FirstName, LastName = u.LastName, UserImage = u.ImageUrl, Password = u.Password, UserType = u.UserType.ToString() };
+            return new UserUpdateDto {Id = u.Id, Username = u.Username, Address = u.Address, DateOfBirth = u.DateOfBirth, Email = u.Email, FirstName = u.FirstName, LastName = u.LastName, UserImage = u.ImageUrl, Password = u.Password, UserType = u.UserType.ToString()};
         }
 
         public async Task<bool> UploadImage(IFormFile imageFile, string userImage)
@@ -89,7 +89,7 @@ namespace OnlineStore.Services
                 return null;
             else
             {
-                return new UserUpdateDto { Username = u.Username, Address = u.Address, DateOfBirth = u.DateOfBirth, Email = u.Email, FirstName = u.FirstName, LastName = u.LastName, UserImage = u.ImageUrl, Password = u.Password, UserType = u.Username.ToString() };
+                return new UserUpdateDto { Username = u.Username, Address = u.Address, DateOfBirth = u.DateOfBirth, Email = u.Email, FirstName = u.FirstName, LastName = u.LastName, UserImage = u.ImageUrl, Password = u.Password, UserType = u.UserType.ToString() };
             }
         }
 
@@ -120,7 +120,7 @@ namespace OnlineStore.Services
             user.Email = dto.Email;
             user.DateOfBirth = dto.DateOfBirth;
             user.ImageUrl = dto.UserImage;
-            if (dto.Password != "")
+            if (!BCrypt.Net.BCrypt.Verify(dto.Password, user.Password))
             {
                 user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
             }
@@ -130,7 +130,7 @@ namespace OnlineStore.Services
             else
             {
                 //id na kraju mozda
-                return new UserUpdateDto { Username = u.Username, Address = u.Address, DateOfBirth = u.DateOfBirth, Email = u.Email, FirstName = u.FirstName, UserImage = u.ImageUrl, Password = u.Password, UserType = u.UserType.ToString() };
+                return new UserUpdateDto { Id = u.Id, Username = u.Username, Address = u.Address, DateOfBirth = u.DateOfBirth, Email = u.Email, FirstName = u.FirstName, UserImage = u.ImageUrl, Password = u.Password, UserType = u.UserType.ToString() };
             }
         }
 
@@ -203,7 +203,7 @@ namespace OnlineStore.Services
             }
 
             List<Claim> claims = new List<Claim>();
-            claims.Add(new Claim(ClaimTypes.Role, "Customer"));
+            claims.Add(new Claim(ClaimTypes.Role, "customer"));
             claims.Add(new Claim(ClaimTypes.Role, "user"));
 
             SymmetricSecurityKey secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secretKey.Value));
@@ -211,7 +211,7 @@ namespace OnlineStore.Services
             var tokeOptions = new JwtSecurityToken(
                 issuer: "http://localhost:49670", //url servera koji je izdao token
                 claims: claims, //claimovi
-                expires: DateTime.Now.AddYears(1), //vazenje tokena u minutama
+                expires: DateTime.Now.AddMinutes(60), //vazenje tokena u minutama
                 signingCredentials: signinCredentials //kredencijali za potpis
             );
             string tokenString = new JwtSecurityTokenHandler().WriteToken(tokeOptions);

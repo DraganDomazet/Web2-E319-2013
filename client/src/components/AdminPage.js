@@ -23,18 +23,11 @@ export default function CustomerPage(props) {
 
                     <li>
                         <button className="btn btn-info" onClick={handleClick}>Update profile</button>
-
                     </li>
                     <li>
                         <button className="btn btn-info" onClick={handleClick2}>Get Merchants Requests</button>
-
                     </li>
-                    {/* <li >
-                        <Link to="/NewOrder">New Order</Link>
-                    </li>
-                    <li>
-                        <Link to="/OldOrders">Old Orders</Link>
-                    </li> */}
+                    
                 </ul></div>
             </nav>
         </div>

@@ -57,5 +57,32 @@ namespace OnlineStore.Services
                 return false;
             }
         }
+
+        public List<ProductUpdateDto> GetAll()
+        {
+            List<ProductUpdateDto> articleDtos = new List<ProductUpdateDto>();
+            foreach (Product a in _productRepository.GetAll())
+            {
+                if (a.Amount != 0)
+                {
+                    articleDtos.Add(_mapper.Map<ProductUpdateDto>(a));
+                }
+            }
+            return articleDtos;
+        }
+
+        public byte[] GetImage(string imageName)
+        {
+            try
+            {
+                var path = Path.Combine("Products", imageName + ".png");
+                var imageBytes = File.ReadAllBytes(path);
+                return imageBytes;
+            }
+            catch
+            {
+                return Array.Empty<byte>();
+            }
+        }
     }
 }

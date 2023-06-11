@@ -5,10 +5,10 @@ import HomePage from './components/HomePage';
 import UpdateUser from './components/UpdateUser';
 import GetMerchantRequests from './components/GetMerchantRequests';
 import NewProduct from './components/NewProduct';
+import AddOrder from './components/AddOrder';
+import CustomerPage from './components/CustomerPage';
 
 
-
-// import UpdateUser from './components/UpdateUser';
 import { Routes, Route } from 'react-router-dom'
 
 
@@ -21,6 +21,10 @@ function App() {
             <Route path='/homepage/updateprofile' element={<UpdateUser />} />
             <Route path='/getmerchants' element={<GetMerchantRequests />} />
             <Route path="/addproduct" element={<NewProduct />} />
+            <Route path="/customerpage" element={<CustomerPage />} />
+            <Route path="/addorder" element={<AddOrder />} />
+
+            
 
             <Route path='/' element={<LogIn />} />
         </Routes>

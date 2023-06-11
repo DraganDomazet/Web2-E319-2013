@@ -16,9 +16,7 @@ namespace OnlineStore.Database.Infrastructure.Configurations
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Id).ValueGeneratedOnAdd();
 
-            builder.HasOne(x => x.Merchant)
-                   .WithMany(x => x.Products)
-                   .OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(x => x.Merchant);
         }
     }
 }

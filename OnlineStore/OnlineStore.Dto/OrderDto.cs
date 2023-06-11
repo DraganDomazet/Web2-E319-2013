@@ -16,6 +16,6 @@ namespace OnlineStore.Dto
         public string Status { get; set; }
         public DateTime CancellationWindow { get; set; }    // 1 Hour from creation
         public DateTime TimeOfDelivery { get; set; }
-        public Guid BuyerId { get; set; }
+        public Guid UserId { get; set; }
     }
 }

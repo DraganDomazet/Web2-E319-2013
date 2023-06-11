@@ -70,7 +70,7 @@ export default function UpdateUser() {
 
         setAddress(user.address);
         setEmail(user.email);
-        setId(user.id);
+        setId(location.state.user.id);
         let date = (user.dateOfBirth + "").split('T')[0];
         setDateOfBirth(date);
         setFirstName(user.firstName);
@@ -137,7 +137,7 @@ export default function UpdateUser() {
                 console.log(response);
             }
 
-            navigate(-1);
+            navigate('/homepage', { state: { user: resp.data, updated: true } });
 
         }
     }

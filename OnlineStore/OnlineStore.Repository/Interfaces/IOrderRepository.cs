@@ -7,12 +7,8 @@ using System.Threading.Tasks;
 
 namespace OnlineStore.Repository.Interfaces
 {
-    public interface IProductRepository
+    public interface IOrderRepository
     {
-        Product AddNew(Product product);
-        Product GetProductById(Guid id);
-        List<Product> GetAll();
-
-
+        Order AddNew(Order order);
     }
 }

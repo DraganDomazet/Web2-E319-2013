@@ -55,10 +55,13 @@ export default function LogIn() {
             const values = { Username: username, Password: password };
             const resp = await Login(values);
             if (resp.data.token && resp.data.id) {
-                localStorage.setItem('token' + resp.data.id, resp.data.token)
+                localStorage.setItem('token' + resp.data.id, resp.data.token);
+                navigate('/homepage', { state: { user: resp.data } });
             }
-            console.log(resp);
-            navigate('/homepage', { state: { user: resp.data } });
+            else {
+                alert("Login failed! Please try again")
+            }
+            
 
         }
     }
@@ -82,7 +85,8 @@ export default function LogIn() {
     }
 
     const fbLogin = async (token) => {
-        const fbresp = await Facebook({Token: token});
+        const fbresp = await Facebook({ Token: token });
+        localStorage.setItem('token' + fbresp.data.id, fbresp.data.token);
         console.log(fbresp);
         navigate('/homepage', { state: { user: fbresp.data } });
 

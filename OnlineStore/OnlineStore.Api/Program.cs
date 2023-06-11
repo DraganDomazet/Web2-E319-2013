@@ -100,10 +100,15 @@ builder.Services.AddAuthorization(options =>
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddTransient<IEmailService, EmailService>();
+
+
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
-builder.Services.AddTransient<IEmailService, EmailService>();
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+
 
 var mapperConfig = new MapperConfiguration(mc =>
 {

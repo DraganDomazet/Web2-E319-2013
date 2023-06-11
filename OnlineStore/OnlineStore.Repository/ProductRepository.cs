@@ -27,5 +27,10 @@ namespace OnlineStore.Repository
         {
             return _dbContext.Products.SingleOrDefault<Product>(u => u.Id == id);
         }
+
+        public List<Product> GetAll()
+        {
+            return _dbContext.Products.ToList();
+        }
     }
 }

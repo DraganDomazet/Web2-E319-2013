@@ -12,7 +12,10 @@ namespace OnlineStore.Services.Interfaces
     {
         ProductUpdateDto AddNew(ProductDto productDto);
         ProductUpdateDto GetProductById(Guid id);
+        List<ProductUpdateDto> GetAll();
         Task<bool> UploadImage(IFormFile image, string userImage);
+        byte[] GetImage(string imageName);
+
 
     }
 }

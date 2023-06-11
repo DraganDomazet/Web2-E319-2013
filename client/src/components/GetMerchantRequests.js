@@ -68,7 +68,7 @@ export default function UserRequest(props) {
     return (
         <div>
             <div className="container text-center">
-                <div className="alert alert-info"><strong><h1>Users</h1></strong></div>
+                <div><strong><h1>Merchant Requests</h1></strong></div>
                 <table className="table table-bordered">
                     <tbody key="tbody">
                         <tr>
