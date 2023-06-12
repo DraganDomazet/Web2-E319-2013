@@ -16,23 +16,53 @@ namespace OnlineStore.Services
     {
 
         private readonly IProductRepository _productRepository;
-        private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
 
         public ProductService(IMapper mapper, IProductRepository productRepository, IUserRepository userRepository)
         {
             _productRepository = productRepository;
             _mapper = mapper;
-            _userRepository = userRepository;
         }
 
         public ProductUpdateDto AddNew(ProductDto productDto)
         {
             Product product = _mapper.Map<Product>(productDto);
+            product.IndividualPrice = productDto.Price;
             _productRepository.AddNew(product);
             ProductUpdateDto productUpdateDto = _mapper.Map<ProductUpdateDto>(product);
             return productUpdateDto;
         }
+
+
+        public ProductUpdateDto UpdateProduct(ProductUpdateDto productDto)
+        {
+            Product product = _mapper.Map<Product>(productDto);
+            _productRepository.UpdateProduct(product);
+            ProductUpdateDto productUpdateDto = _mapper.Map<ProductUpdateDto>(product);
+            return productUpdateDto;
+        }
+
+        public bool DeleteProduct(Guid Id)
+        {
+            if (_productRepository.DeleteProduct(Id))
+                return true;
+            else
+                return false;
+        }
+
+        public List<ProductUpdateDto> MerchantProducts(Guid id)
+        {
+            List<ProductUpdateDto> productsDto = new List<ProductUpdateDto>();
+            foreach (Product product in _productRepository.GetAll())
+            {
+                if (product.MerchantId == id)
+                {
+                    productsDto.Add(_mapper.Map<ProductUpdateDto>(product));
+                }
+            }
+            return productsDto;
+        }
+        
 
         public ProductUpdateDto GetProductById(Guid Id)
         {

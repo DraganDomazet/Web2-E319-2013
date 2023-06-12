@@ -11,15 +11,23 @@ export default function CustomerPage(props) {
         navigate('/addproduct', { state: { user: location.state.user } });
     }
 
+    const showProducts = async e => {
+        navigate('/showProducts', { state: { user: location.state.user } });
+    }
+
     return (
-        <div className="row mx-auto col-10 col-md-8 col-lg-6">
+        <div className="jumbotron text-center">
             <h1>You logged in as Merchant {location.state.user.username}!</h1>
+            <h1>{location.state.product ? "You added product" : ""}</h1>
                 <ul className="list-group">
                     <li className="list-group-item">
-                        <button className="btn btn-outline-danger" onClick={handleClick}>Update profile</button>
+                        <button className="btn btn-outline-danger custom" onClick={handleClick}>Update profile</button>
                     </li>
                     <li className="list-group-item">
-                        <button className="btn btn-outline-primary" onClick={addProduct}>Add product</button>
+                        <button className="btn btn-outline-primary custom" onClick={addProduct}>Add product</button>
+                    </li>
+                    <li className="list-group-item">
+                        <button className="btn btn-outline-success custom" onClick={showProducts}>My products</button>
                     </li>
                 </ul>
         </div>

@@ -31,6 +31,17 @@ namespace OnlineStore.Repository
             return product;
         }
 
+        public bool DeleteProduct(Guid Id)
+        {
+            var article = _dbContext.Products.FirstOrDefault(a => a.Id == Id);
+            if (article == null)
+                return false;
+            _dbContext.Products.Remove(article);
+            _dbContext.SaveChanges();
+            return true;
+        }
+
+
         public Product GetProductById(Guid id)
         {
             return _dbContext.Products.SingleOrDefault<Product>(u => u.Id == id);

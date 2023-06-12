@@ -27,6 +27,20 @@ namespace OnlineStore.Api.Controllers
             return Ok(_productService.AddNew(productDto));
         }
 
+        [HttpPut("update-product")]
+        [Authorize(Roles = "merchant")]
+        public IActionResult Put([FromBody] ProductUpdateDto productUpdateDto)
+        {
+            return Ok(_productService.UpdateProduct(productUpdateDto));
+        }
+
+        [HttpDelete("delete-product")]
+        //[Authorize(Roles = "merchant")]
+        public IActionResult Delete(Guid id)
+        {
+            return Ok(_productService.DeleteProduct(id));
+        }
+
         [HttpGet("get-product/{id}")]
         [Authorize(Roles = "user")]
         public IActionResult GetProductById(Guid id)
@@ -54,6 +68,13 @@ namespace OnlineStore.Api.Controllers
         public IActionResult GetAll()
         {
             return Ok(_productService.GetAll());
+        }
+
+        [HttpGet("merchant-products/{id}")]
+        [Authorize(Roles = "merchant")]
+        public IActionResult GetAllForUser(Guid id)
+        {
+            return Ok(_productService.MerchantProducts(id));
         }
 
         [HttpGet("get-image/{imageName}")]

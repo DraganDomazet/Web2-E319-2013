@@ -41,16 +41,7 @@ namespace OnlineStore.Services
                 smtpClient.Send(mailMessage);
                 smtpClient.Disconnect(true);
             }
-            //var smtpClient = new SmtpClient(_configuration["Smtp:Host"], int.Parse(_configuration["Smtp:Port"]))
-            //{
-            //    EnableSsl = true,
-            //    Credentials = new NetworkCredential(_configuration["Smtp:Username"], _configuration["Smtp:Password"])
-            //};
-
-            //smtpClient.SendMailAsync(new MailMessage(from: _configuration["Smtp:Username"],
-            //                                                to: email,
-            //                                                subject: subject,
-            //                                                body: body));
+            
         }
     }
 }
