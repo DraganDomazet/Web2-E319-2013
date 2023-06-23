@@ -128,7 +128,7 @@ export default function UpdateUser() {
 
         e.preventDefault();
         if (validate()) {
-            const values = { Id: id, Username: username, Password: password, DateOfBirth: dateOfBirth, FirstName: firstname, LastName: lastname, Email: email, Address: address, UserType: 'Customer', UserImage: imageUrl };
+            const values = { Id: id, Username: username, Password: password, DateOfBirth: dateOfBirth, FirstName: firstname, LastName: lastname, Email: email, Address: address, UserType: 'Customer', UserImage: username };
             const resp = await UpdateUserProfile(values);
             console.log(resp);
 

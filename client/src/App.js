@@ -10,6 +10,7 @@ import AddOrder from './components/AddOrder';
 import CustomerPage from './components/CustomerPage';
 import AllOrders from './components/AllOrders';
 import ShowProducts from './components/ShowProducts';
+import OrdersMap from './components/OrdersMap';
 
 
 import { Routes, Route } from 'react-router-dom'
@@ -23,9 +24,12 @@ function App() {
             <Route path='/homepage/*' element={<HomePage />} />
             <Route path='/homepage/updateprofile' element={<UpdateUser />} />
             <Route path='/getmerchants' element={<GetMerchantRequests />} />
+
             <Route path="/addproduct" element={<NewProduct />} />
             <Route path="/updateproduct" element={<UpdateProduct />} />
             <Route path="/showProducts" element={<ShowProducts />} />
+            <Route path="/ordersMap" element={<OrdersMap />} />
+            
 
             <Route path="/customerpage" element={<CustomerPage />} />
             <Route path="/addorder" element={<AddOrder />} />

@@ -1,20 +1,27 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { GetAllArticles } from "../services/ProductService";
 import { AddOrder } from "../services/OrderService";
 import { useLocation, useNavigate } from 'react-router-dom';
+import { PayPalButtons, PayPalScriptProvider } from "@paypal/react-paypal-js";
+import { useJsApiLoader, Autocomplete } from "@react-google-maps/api";
+import Geocode from "react-geocode";
 
 
 export default function NewOrder() {
+    Geocode.setApiKey(process.env.REACT_APP_GEOCODE_KEY);
+    Geocode.setLanguage("en");
+    Geocode.setRegion("rs");
     const location = useLocation();
     const navigate = useNavigate();
-    
+
     const [elements, setElements] = useState([]);
     const [listOfArticles, setList] = useState([]);
     const [address, setAddress] = useState('');
     const [comment, setComment] = useState('');
     const [am, setAm] = useState(0);
     const [cartInfo, setCartInfo] = useState('Cart is empty!');
-
+    const [libraries] = useState(["places"]);
+    const autocompleteRef = useRef(null);
 
 
     const config = {
@@ -22,11 +29,22 @@ export default function NewOrder() {
     };
 
     const tableArticles = async (e) => {
+        const response = await Geocode.fromAddress("Eiffel Tower");
+        const { lat, lng } = response.results[0].geometry.location;
+
+
         const resp = await GetAllArticles(config);
-        console.log(resp);
+
+        // console.log(resp);
         setElements(resp.data);
 
     }
+
+    const { isLoaded } = useJsApiLoader({
+        googleMapsApiKey: process.env.REACT_APP_GEOCODE_KEY,
+        language: "en",
+        libraries: ["places"]
+    });
 
     useEffect(() => {
         tableArticles();
@@ -77,14 +95,11 @@ export default function NewOrder() {
         const Order = { Address: address, Comment: comment, UserId: location.state.user.id, Products: listOfArticles }
         if (valid()) {
             const resp = await AddOrder(Order, config);
-            console.log(resp);
             if (resp.data.id === -1 || resp.data === '') {
                 validationError = "You can not order this articles!";
                 alert(validationError);
             }
             else {
-                console.log("Successfully!!!");
-                console.log(resp.data);
                 tableArticles();
                 navigate("/homepage", { state: { user: location.state.user, order: true } })
             }
@@ -104,19 +119,17 @@ export default function NewOrder() {
             list.push(ArticleNew);
             setList(list);
             setCartInfo("You have added " + listOfArticles.length + " products to cart");
-            console.log(listOfArticles);
             return true;
         }
         else {
             validationError = "Amount of available products is exceeded!";
             alert(validationError);
         }
-        
+
     }
 
     const addOnList = (event, element) => {
         event.preventDefault();
-        console.log("https://localhost:7241/api/products/get-image/" + element.id);
         const ArticleNew = { id: element.id, name: element.name, IndividualPrice: element.price, amount: element.amount, description: element.description, ProductImageUrl: element.productImageUrl, merchantID: location.state.user.id }
         setList(ArticleNew);
         addQuantity(event, element);
@@ -131,6 +144,58 @@ export default function NewOrder() {
         <td><input type={"button"} className="btn btn-outline-success" onClick={(event) => addOnList(event, element)} value={"Add product to cart"}></input></td>
     </tr>);
 
+    // const handlePayPal = () => {
+    //     navigate('/review');
+    // }
+
+    const handlePayPalPayment = async (data, actions) => {
+        // const temp = cartContext.cartItems.map((item) => ({
+        //     productId: item.id,
+        //     productAmount: item.quantity,
+        // }));
+        // const price = await buyerService.getTotalPrice(temp);
+
+        return actions.order.create({
+            purchase_units: [
+                {
+                    amount: {
+                        value: "11.23",
+                        currency_code: "USD",
+                    },
+                },
+            ],
+        });
+    };
+
+    const handleApprovement = (data, actions) => {
+        return actions.order.capture().then(async (details) => {
+        console.log("Radi!!!!");
+            // const items = cartContext.cartItems.map((item) => ({
+            //     productId: item.id,
+            //     productAmount: item.quantity,
+            // }));
+
+            // const createOrderValues = {
+            //     items,
+            //     deliveryAddress: cartContext.address,
+            //     comment: cartContext.comment,
+            // };
+
+            // try {
+            //     await buyerService.createOrder(createOrderValues);
+            //     cartContext.clearCart();
+            //     cartContext.setCartAddress("");
+            //     cartContext.setCartComment("");
+            //     navigator("/previous-orders");
+            // } catch (error) {
+            //     if (error.response) alert(error.response.data.Exception);
+            // }
+        });
+    };
+
+    if (!isLoaded) {
+        return <div>Loading...</div>;
+    }
 
     return (
         <div>
@@ -153,9 +218,37 @@ export default function NewOrder() {
                 <br /><br />
                 <div><h2 style={{ color: `red` }}>{cartInfo}</h2></div>
 
-                <div className="mb-3"><input className="form-control" placeholder="Address" type={"text"} name='address' value={address} onChange={handleInputChanges} ></input></div><br />
+                <div className="mb-3">
+                    <Autocomplete
+                        onLoad={(autocomplete) => {
+                            autocompleteRef.current = autocomplete;
+                        }}
+                        onPlaceChanged={() => {
+                            const selectedPlace = autocompleteRef.current.getPlace();
+                            if (selectedPlace && selectedPlace.formatted_address) {
+                                setAddress(selectedPlace.formatted_address);
+                            }
+                        }}
+                    >
+                        <input
+                            placeholder="Insert your address"
+                            type="text"
+                            id="address"
+                            required
+                        />
+                    </Autocomplete>
+                </div><br />
                 <div><input className="form-control" placeholder="Comment" type={"text"} name='comment' value={comment} onChange={handleInputChanges} ></input></div><br />
                 <input type={"submit"} className="btn btn-outline-success" name='poruci' value={"Create Order"} onClick={createOrder}></input><br />
+                <PayPalScriptProvider
+                    options={{ "client-id": "AZ6--ACQKvkCHEmfLHc01tiJrlF6_zP86RC2zKr8GpchbnmAN_wHBhZMCRSMi5KrSivSw45bMQ9L9w_6" }}
+                >
+                    <PayPalButtons
+                        style={{ label: "checkout" }}
+                        createOrder={handlePayPalPayment}
+                        onApprove={handleApprovement}
+                    />
+                </PayPalScriptProvider>
             </div>
 
 
