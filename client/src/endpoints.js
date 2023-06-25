@@ -17,6 +17,8 @@ export const urlAddOrder = `${baseUrl}/api/orders/add-order`
 export const urlGetOrders = `${baseUrl}/api/orders/get-all-orders`
 export const urlGetCustomerOrders = `${baseUrl}/api/orders/get-user-orders`
 export const urlCancelOrder = `${baseUrl}/api/orders/cancel-order`
+export const urlGetMerchantOrders = `${baseUrl}/api/orders/merchant`
+
 
 
 

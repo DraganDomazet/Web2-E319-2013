@@ -30,6 +30,7 @@ namespace OnlineStore.Repository
         public List<Order> GetAll()
         {
             List<Order> orders = new List<Order>();
+            var a = _dbContext.Orders;
             foreach (Order order in _dbContext.Orders)
             {
                 orders.Add(order);

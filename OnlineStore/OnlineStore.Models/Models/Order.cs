@@ -11,6 +11,7 @@ namespace OnlineStore.Models.Models
     {
         public Guid Id { get; set; }
         public List<OrderLineItem> Products { get; set; } = new List<OrderLineItem>();
+        public string? ProductIds { get; set; } 
         public string Comment { get; set; }
         public string DeliveryAddress { get; set; }
         public double Price { get; set; }

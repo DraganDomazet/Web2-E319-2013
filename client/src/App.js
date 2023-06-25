@@ -12,12 +12,9 @@ import CustomerOrders from './components/CustomerOrders';
 import AllOrders from './components/AllOrders';
 import ShowProducts from './components/ShowProducts';
 import OrdersMap from './components/OrdersMap';
-
-
-
+import Orders from './components/Orders';
 
 import { Routes, Route } from 'react-router-dom'
-
 
 function App() {
     return (
@@ -31,6 +28,7 @@ function App() {
             <Route path="/addproduct" element={<NewProduct />} />
             <Route path="/updateproduct" element={<UpdateProduct />} />
             <Route path="/showProducts" element={<ShowProducts />} />
+            <Route path="/orders" element={<Orders />} />
             <Route path="/ordersMap" element={<OrdersMap />} />
             
 

@@ -47,5 +47,12 @@ namespace OnlineStore.Api.Controllers
 
         }
 
+        [HttpGet("merchant/{id}")]
+        public IActionResult GetOrders(Guid id)
+        {
+            return Ok(_orderService.GetOrders(id));
+        }
+
+
     }
 }

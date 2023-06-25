@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OnlineStore.Database;
 
@@ -11,9 +12,11 @@ using OnlineStore.Database;
 namespace OnlineStore.Database.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230625122247_changedModelOrder")]
+    partial class changedModelOrder
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -45,7 +48,7 @@ namespace OnlineStore.Database.Migrations
                     b.Property<double>("Price")
                         .HasColumnType("float");
 
-                    b.Property<string>("ProductIds")
+                    b.Property<string>("Products")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -190,7 +193,7 @@ namespace OnlineStore.Database.Migrations
             modelBuilder.Entity("OnlineStore.Models.Models.OrderLineItem", b =>
                 {
                     b.HasOne("OnlineStore.Models.Models.Order", "Order")
-                        .WithMany("Products")
+                        .WithMany()
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -215,11 +218,6 @@ namespace OnlineStore.Database.Migrations
                         .IsRequired();
 
                     b.Navigation("Merchant");
-                });
-
-            modelBuilder.Entity("OnlineStore.Models.Models.Order", b =>
-                {
-                    b.Navigation("Products");
                 });
 
             modelBuilder.Entity("OnlineStore.Models.Models.User", b =>

@@ -33,10 +33,11 @@ namespace OnlineStore.Services
         public OrderReturnDto AddNew(OrderListDto orderDto)
         {
             OrderReturnDto orderBack = new OrderReturnDto();
-            List<Order> orders = new List<Order>();
+            Order order = new Order();
             List<Product> products = new List<Product>();
             orderBack.FinalyPrice = 0;
             int dostava = 0;
+
             foreach (OrderLineItemDto a in orderDto.Products)
             {
                 Product product = _productRepository.GetProductById(a.Id);
@@ -47,10 +48,15 @@ namespace OnlineStore.Services
                     {
                         product.Amount -= a.Amount;
                         orderBack.FinalyPrice += a.Amount * a.IndividualPrice;
-                        Order order = new Order { CustomerId = orderDto.UserId, DeliveryAddress = orderDto.Address, Price = a.IndividualPrice, Comment = orderDto.Comment, Status = OrderState.Started };
-                        orders.Add(order);
+                        order = new Order { CustomerId = orderDto.UserId, DeliveryAddress = orderDto.Address, Price = a.IndividualPrice, Comment = orderDto.Comment, Status = OrderState.Started };
+                        order.Price = orderBack.FinalyPrice;
+                        orderBack.DeliveryTime = DateTime.Now.AddDays(1);
+                        order.TimeOfDelivery = orderBack.DeliveryTime;
+                        order.CancellationWindow = DateTime.Now;
+
 
                         products.Add(product);
+                        var b = 8;
                     }
                     else
                     {
@@ -64,24 +70,22 @@ namespace OnlineStore.Services
 
             }
             orderBack.FinalyPrice += dostava;
-            orderBack.DeliveryTime = DateTime.Now.AddDays(1);
-
-            DateTime now = DateTime.Now;
 
             try
             {
-                foreach (Order o in orders)
-                {
-                    o.Price = orderBack.FinalyPrice;
-                    o.TimeOfDelivery = orderBack.DeliveryTime;
-                    o.CancellationWindow = now;
-                    var or = _orderRepository.AddNew(o);
-                    var s = or;
-                }
                 foreach (Product product in products)
                 {
+                    if (order.ProductIds != null)
+                    {
+                        order.ProductIds = order.ProductIds + '/' + product.Id.ToString();
+                    } else
+                    {
+                        order.ProductIds = product.Id.ToString();
+                    }
                     _productRepository.UpdateProduct(product);
                 }
+                var or = _orderRepository.AddNew(order);
+
             }
             catch (Exception ex)
             {
@@ -134,12 +138,42 @@ namespace OnlineStore.Services
             Order order = _orderRepository.Find(id);
             if (order.CancellationWindow >= order.TimeOfDelivery)
             {
-                //orderFromdto.Customer = _userRepository.FindById(o.UserId);
                 _orderRepository.CancelOrder(order);
 
                 return true;
             }
             return false;
+        }
+
+
+        public List<OrderDto> GetOrders(Guid id)
+        {
+            User user = _userRepository.FindById(id);
+            List<OrderDto> orderDtos = new List<OrderDto>();
+
+            List<Order> orders = _orderRepository.GetAll();
+            List<Product> products = _productRepository.GetAll();
+            var filteredProduct = products.Where(p => p.MerchantId == id);
+            var productsIds = filteredProduct.Select(x => x.Id.ToString()).ToList();
+
+
+            foreach (var o in orders)
+            {
+                if (o.ProductIds != null)
+                {   
+                    var a = o.ProductIds.Split('/').ToList();
+                    if (a.Any(p => productsIds.Contains(p)))
+                    {
+                        OrderDto orderDto = _mapper.Map<OrderDto>(o);
+                        orderDto.UserId = o.CustomerId;
+                        orderDtos.Add(orderDto);
+
+                    }
+                }
+            }
+
+            return orderDtos;
+
         }
 
     }

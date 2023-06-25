@@ -18,6 +18,9 @@ export default function CustomerPage(props) {
     const showOrdersMap = async e => {
         navigate('/ordersMap', { state: { user: location.state.user } });
     }
+    const showOrders = async e => {
+        navigate('/orders', { state: { user: location.state.user } });
+    }
 
 
     return (
@@ -33,6 +36,9 @@ export default function CustomerPage(props) {
                 </li>
                 <li className="list-group-item">
                     <button className="btn btn-outline-success custom" onClick={showProducts}>My products</button>
+                </li>
+                <li className="list-group-item">
+                    <button className="btn btn-btn-btn-outline-secondary custom" onClick={showOrders}>Show orders</button>
                 </li>
                 <li className="list-group-item">
                     <button className="btn btn-btn-outline-warning custom" onClick={showOrdersMap}>Show Map</button>
