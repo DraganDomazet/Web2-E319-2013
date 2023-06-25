@@ -25,6 +25,14 @@ namespace OnlineStore.Api.Controllers
             return Ok(_orderService.AddNew(orderDto));
         }
 
+
+        [HttpGet("get-user-orders/{id}")]
+        public IActionResult GetOld(Guid id)
+        {
+            return Ok(_orderService.GetUserOrders(id));
+        }
+
+
         [HttpGet("get-all-orders")]
         [Authorize(Roles = "admin")]
         public IActionResult GetAll()
@@ -32,6 +40,12 @@ namespace OnlineStore.Api.Controllers
             return Ok(_orderService.GetAllOrders());
         }
 
+        [HttpPut("cancel-order")]
+        public IActionResult CancelOrder([FromBody] OrderDto order)
+        {
+            return Ok(_orderService.CancelOrder(order.Id));
+
+        }
 
     }
 }

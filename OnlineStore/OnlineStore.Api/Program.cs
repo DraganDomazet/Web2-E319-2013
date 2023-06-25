@@ -92,9 +92,7 @@ builder.Services.AddCors(options =>
 
 builder.Services.AddAuthorization(options =>
 {
-    options.AddPolicy("user", policy => policy.RequireClaim("user")); //Ovde mozemo kreirati pravilo za validaciju nekog naseg claima
-    options.AddPolicy("admin", policy => policy.RequireClaim("admin")); //Ovde mozemo kreirati pravilo za validaciju nekog naseg claima
-
+    options.AddPolicy("user", policy => policy.RequireClaim("user"));  //Ovde mozemo kreirati pravilo za validaciju nekog naseg claima
 });
 
 builder.Services.AddScoped<IAuthService, AuthService>();

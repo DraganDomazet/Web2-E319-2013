@@ -11,5 +11,7 @@ namespace OnlineStore.Services.Interfaces
     {
         OrderReturnDto AddNew(OrderListDto orderDto);
         List<OrderDto> GetAllOrders();
+        List<OrderDto> GetUserOrders(Guid id);
+        bool CancelOrder(Guid id);
     }
 }

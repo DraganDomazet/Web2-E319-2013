@@ -1,4 +1,5 @@
 ﻿using OnlineStore.Database;
+using OnlineStore.Models.Enums;
 using OnlineStore.Models.Models;
 using OnlineStore.Repository.Interfaces;
 using System;
@@ -34,6 +35,20 @@ namespace OnlineStore.Repository
                 orders.Add(order);
             }
             return orders;
+        }
+
+        public Order Find(Guid id)
+        {
+            Order order = _dbContext.Orders.Find(id);
+            return order;
+        }
+
+        public Order CancelOrder(Order order)
+        {
+            order.Status = OrderState.Canceled;
+            _dbContext.Orders.Update(order);
+            _dbContext.SaveChanges();
+            return order;
         }
     }
 }

@@ -47,7 +47,7 @@ namespace OnlineStore.Services
                     {
                         product.Amount -= a.Amount;
                         orderBack.FinalyPrice += a.Amount * a.IndividualPrice;
-                        Order order = new Order {CustomerId= orderDto.UserId, DeliveryAddress = orderDto.Address, Price = a.IndividualPrice, Comment = orderDto.Comment, Status = OrderState.Started };
+                        Order order = new Order { CustomerId = orderDto.UserId, DeliveryAddress = orderDto.Address, Price = a.IndividualPrice, Comment = orderDto.Comment, Status = OrderState.Started };
                         orders.Add(order);
 
                         products.Add(product);
@@ -108,6 +108,39 @@ namespace OnlineStore.Services
             return orderDtos;
         }
 
+
+        public List<OrderDto> GetUserOrders(Guid id)
+        {
+            User user = _userRepository.FindById(id);
+            List<OrderDto> orderDtos = new List<OrderDto>();
+
+            List<Order> orders = _orderRepository.GetAll();
+            foreach (var o in orders)
+            {
+                if (o.Status == OrderState.Started && o.CustomerId == id)
+                {
+                    OrderDto orderDto = _mapper.Map<OrderDto>(o);
+                    orderDto.UserId = o.CustomerId;
+                    orderDtos.Add(orderDto);
+                }
+            }
+
+            return orderDtos;
+
+        }
+
+        public bool CancelOrder(Guid id)
+        {
+            Order order = _orderRepository.Find(id);
+            if (order.CancellationWindow >= order.TimeOfDelivery)
+            {
+                //orderFromdto.Customer = _userRepository.FindById(o.UserId);
+                _orderRepository.CancelOrder(order);
+
+                return true;
+            }
+            return false;
+        }
 
     }
 }

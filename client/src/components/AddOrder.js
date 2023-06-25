@@ -20,24 +20,17 @@ export default function NewOrder() {
     const [comment, setComment] = useState('');
     const [am, setAm] = useState(0);
     const [cartInfo, setCartInfo] = useState('Cart is empty!');
-    const [libraries] = useState(["places"]);
     const autocompleteRef = useRef(null);
 
-
     const config = {
-        headers: { Authorization: 'Bearer ' + localStorage.getItem('token' + location.state.user.id), }
+        headers: { Authorization: 'Bearer ' + localStorage.getItem('token' + location.state.user.id) }
     };
 
     const tableArticles = async (e) => {
-        const response = await Geocode.fromAddress("Eiffel Tower");
-        const { lat, lng } = response.results[0].geometry.location;
-
-
+        // const response = await Geocode.fromAddress("Eiffel Tower");
+        // const { lat, lng } = response.results[0].geometry.location;
         const resp = await GetAllArticles(config);
-
-        // console.log(resp);
         setElements(resp.data);
-
     }
 
     const { isLoaded } = useJsApiLoader({

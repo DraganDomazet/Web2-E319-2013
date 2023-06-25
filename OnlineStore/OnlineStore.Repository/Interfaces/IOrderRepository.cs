@@ -11,5 +11,8 @@ namespace OnlineStore.Repository.Interfaces
     {
         Order AddNew(Order order);
         List<Order> GetAll();
+        Order Find(Guid id);
+        Order CancelOrder(Order order);
+
     }
 }

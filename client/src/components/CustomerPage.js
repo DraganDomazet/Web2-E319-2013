@@ -12,7 +12,10 @@ export default function CustomerPage(props) {
         navigate('/addorder', { state: { user: location.state.user } });
     }
 
-    console.log(location.state.updated ? location.state.updated : "nope");
+    const handleClick3 = async e => {
+        navigate('/customerorders', { state: { user: location.state.user } });
+    }
+
 
     return (
 
@@ -31,10 +34,7 @@ export default function CustomerPage(props) {
                     <button className="btn btn-block btn-outline-dark custom" onClick={handleClick2}>Add order</button>
                 </li>
                 <li >
-                    <button className="btn btn-block disabled btn-outline-info custom">New Orders(not implemented yet)</button>
-                </li>
-                <li>
-                    <button className="btn btn-block btn-outline-info custom disabled">Old Orders(not implemented yet)</button>
+                    <button className="btn btn-block btn-outline-success custom" onClick={handleClick3}>My Orders</button>
                 </li>
             </ul>
         </div>

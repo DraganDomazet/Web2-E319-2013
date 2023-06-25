@@ -16,8 +16,6 @@ export default function LogIn() {
         info = location.state.info;
     }
 
-
-
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const handleInputChanges = e => {
@@ -29,23 +27,6 @@ export default function LogIn() {
             setPassword(value);
         }
     }
-
-    // const googleLogin = async (response) => {
-    //     const LogObject = { Token: response.tokenId }
-    //     const logresp = await Google(LogObject);
-    //     console.log(logresp)
-    //     if (logresp.data.logedIn === true) {
-    //         localStorage.setItem('token' + logresp.data.user.id, logresp.data.token);
-    //     }
-    // }
-
-    // const responseGoogle = (response) => {
-    //     console.log(response);
-    //     // Send the access token to your backend
-    //     googleLogin(response);
-    // }
-
-
 
     const login = async e => {
 

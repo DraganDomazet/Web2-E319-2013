@@ -15,6 +15,11 @@ export const urlGetProducts = `${baseUrl}/api/products/get-all`
 export const urlUploadImage = `${baseUrl}/api/products/upload-image`
 export const urlAddOrder = `${baseUrl}/api/orders/add-order`
 export const urlGetOrders = `${baseUrl}/api/orders/get-all-orders`
+export const urlGetCustomerOrders = `${baseUrl}/api/orders/get-user-orders`
+export const urlCancelOrder = `${baseUrl}/api/orders/cancel-order`
+
+
+
 
 
 
