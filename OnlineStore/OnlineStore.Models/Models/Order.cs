@@ -20,5 +20,6 @@ namespace OnlineStore.Models.Models
         public DateTime TimeOfDelivery { get; set; }
         public Guid CustomerId { get; set; }
         public User Customer { get; set; }
+        public bool isAccepted { get; set; }
     }
 }

@@ -13,6 +13,7 @@ namespace OnlineStore.Repository.Interfaces
         List<Order> GetAll();
         Order Find(Guid id);
         Order CancelOrder(Order order);
+        Order AcceptOrder(Order order);       
 
     }
 }

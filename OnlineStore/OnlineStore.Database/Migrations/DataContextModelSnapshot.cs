@@ -46,7 +46,6 @@ namespace OnlineStore.Database.Migrations
                         .HasColumnType("float");
 
                     b.Property<string>("ProductIds")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Status")
@@ -55,6 +54,11 @@ namespace OnlineStore.Database.Migrations
 
                     b.Property<DateTime>("TimeOfDelivery")
                         .HasColumnType("datetime2");
+
+                    b.Property<bool>("isAccepted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 

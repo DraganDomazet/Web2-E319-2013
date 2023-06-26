@@ -1,11 +1,11 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { GetOrders } from "../services/OrderService";
+import { GetOrders, AcceptOrder } from "../services/OrderService";
 import { MapContainer, Marker, TileLayer, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import Geocode from "react-geocode";
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 const ProductsMap = () => {
     const location = useLocation();
@@ -16,10 +16,9 @@ const ProductsMap = () => {
     Geocode.setLocationType("ROOFTOP");
     Geocode.enableDebug();
 
-    const position = [44.804586472419314, 20.474730942252326];
+    const position = [45.264586472419314, 19.840730942252326];
     const [markersPositions, setMarkersPositions] = useState([]);
     const [orders, setOrders] = useState([]);
-    const navigator = useNavigate();
 
     const markerIcon = new L.Icon({
         iconUrl: "package.png",
@@ -54,45 +53,52 @@ const ProductsMap = () => {
         setMarkersPositions(markersData);
     };
 
-    // const handleAcceptOrder = async (orderId) => {
-    //     try {
-    //         await sellerService.acceptOrder(orderId);
-    //         navigator("/my-orders");
-    //     } catch (error) {
-    //         if (error.response) {
-    //             alert(error.response.data.Exception);
-    //         }
-    //     }
-    // };
+    const handleAcceptOrder = async (orderId) => {
+        try {
+            const resp = await AcceptOrder(orderId);
+            if (resp) {
+                fetchData();
+            }
+        } catch (error) {
+            if (error.response) {
+                alert(error.response.data.Exception);
+            }
+        }
+    };
 
     return (
-        <MapContainer
-            center={position}
-            zoom={10}
-            style={{ width: "80vw", height: "80vh" }}
-        >
-            <TileLayer url={process.env.REACT_APP_URL_MT} />
-            {markersPositions.map((marker) => (
-                <div key={marker.id}>
-                    <Marker position={[marker.lat, marker.lon]} icon={markerIcon}>
-                        <Popup>
-                            <p>Address: {marker.address}</p>
-                            <p>Price: ${marker.price}</p>
-                            {!orders.find((order) => order.id === marker.id).isAccepted && (
-                                <div className="container">
-                                    {/* <button
-                                        className={classes.acceptButton}
-                                        onClick={() => handleAcceptOrder(marker.id)}
-                                    >
-                                        Accept
-                                    </button> */}
-                                </div>
-                            )}
-                        </Popup>
-                    </Marker>
-                </div>
-            ))}
-        </MapContainer>
+        <div>
+            <h1 className="h-80 d-flex align-items-center justify-content-center">Select a package on map if you want to accept that order!</h1>
+            <div className="h-80 d-flex align-items-center justify-content-center" style={{ marginTop: "50px" }}>
+                <MapContainer
+                    center={position}
+                    zoom={13}
+                    style={{ width: "80vw", height: "80vh" }}
+                >
+                    <TileLayer url={process.env.REACT_APP_URL_MT} />
+                    {markersPositions.map((marker) => (
+                        <div key={marker.id}>
+                            <Marker position={[marker.lat, marker.lon]} icon={markerIcon}>
+                                <Popup>
+                                    <p>Address: {marker.address}</p>
+                                    <p>Price: ${marker.price}</p>
+                                    {!orders.find((order) => order.id === marker.id).isAccepted && (
+                                        <div className="container">
+                                            <button
+                                                className="btn btn-outline-primary"
+                                                onClick={() => handleAcceptOrder(marker.id)}
+                                            >
+                                                Accept
+                                            </button>
+                                        </div>
+                                    )}
+                                </Popup>
+                            </Marker>
+                        </div>
+                    ))}
+                </MapContainer>
+            </div>
+        </div>
     );
 };
 

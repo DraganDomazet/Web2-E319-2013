@@ -53,6 +53,10 @@ namespace OnlineStore.Api.Controllers
             return Ok(_orderService.GetOrders(id));
         }
 
-
+        [HttpPut("accept-order/{id}")]
+        public IActionResult AcceptOrder(Guid id)
+        {
+            return Ok(_orderService.AcceptOrder(id));
+        }
     }
 }

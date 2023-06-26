@@ -51,5 +51,12 @@ namespace OnlineStore.Repository
             _dbContext.SaveChanges();
             return order;
         }
+
+        public Order AcceptOrder(Order order)
+        {
+            _dbContext.Orders.Update(order);
+            _dbContext.SaveChanges();
+            return order;
+        }
     }
 }

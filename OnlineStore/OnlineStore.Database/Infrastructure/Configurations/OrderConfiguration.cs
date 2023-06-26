@@ -5,6 +5,7 @@ using OnlineStore.Models.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -29,7 +30,12 @@ namespace OnlineStore.Database.Infrastructure.Configurations
                    .HasConversion(
                         x => x.ToString(),
                         x => Enum.Parse<OrderState>(x)
-                    );
+            );
+
+            builder.Property(x => x.isAccepted)
+                .IsRequired()
+                .HasDefaultValue(false);
+
         }
     }
 }

@@ -14,5 +14,6 @@ namespace OnlineStore.Services.Interfaces
         List<OrderDto> GetUserOrders(Guid id);
         List<OrderDto> GetOrders(Guid id); //order with product of current merchant
         bool CancelOrder(Guid id);
+        bool AcceptOrder(Guid id);
     }
 }

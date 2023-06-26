@@ -12,8 +12,8 @@ using OnlineStore.Database;
 namespace OnlineStore.Database.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230625123517_changedModelOrderagain")]
-    partial class changedModelOrderagain
+    [Migration("20230626113356_changedOrderModel")]
+    partial class changedOrderModel
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -49,7 +49,6 @@ namespace OnlineStore.Database.Migrations
                         .HasColumnType("float");
 
                     b.Property<string>("ProductIds")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Status")
@@ -58,6 +57,11 @@ namespace OnlineStore.Database.Migrations
 
                     b.Property<DateTime>("TimeOfDelivery")
                         .HasColumnType("datetime2");
+
+                    b.Property<bool>("isAccepted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 

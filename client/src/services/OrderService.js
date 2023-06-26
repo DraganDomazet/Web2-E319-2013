@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { urlAddOrder, urlGetOrders, urlGetCustomerOrders, urlCancelOrder, urlGetMerchantOrders } from '../endpoints';
+import { urlAddOrder, urlGetOrders, urlGetCustomerOrders, urlCancelOrder, urlGetMerchantOrders, urlAcceptOrder } from '../endpoints';
 
 
 export const AddOrder = async (Order, config) => {
@@ -20,4 +20,8 @@ export const CancelOrder = async (element, config) => {
 
 export const GetOrders = async (id, config) => {
     return await axios.get(urlGetMerchantOrders + `/${id}`, id, config);
+}
+
+export const AcceptOrder = async (id, config) => {
+    return await axios.put(urlAcceptOrder + `/${id}`, id, config);
 }

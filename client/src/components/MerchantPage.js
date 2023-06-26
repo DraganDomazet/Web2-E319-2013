@@ -25,7 +25,7 @@ export default function CustomerPage(props) {
 
     return (
         <div className="jumbotron text-center">
-            <h1>You logged in as Merchant {location.state.user.username}!</h1>
+            <h1>You logged in as Merchant with username: {location.state.user.username}</h1>
             <h1>{location.state.product ? "You added product" : ""}</h1>
             <ul className="list-group">
                 <li className="list-group-item">
@@ -38,10 +38,10 @@ export default function CustomerPage(props) {
                     <button className="btn btn-outline-success custom" onClick={showProducts}>My products</button>
                 </li>
                 <li className="list-group-item">
-                    <button className="btn btn-btn-btn-outline-secondary custom" onClick={showOrders}>Show orders</button>
+                    <button className="btn btn-outline-warning custom" onClick={showOrders}>Show orders</button>
                 </li>
                 <li className="list-group-item">
-                    <button className="btn btn-btn-outline-warning custom" onClick={showOrdersMap}>Show Map</button>
+                    <button className="btn btn-outline-secondary custom" onClick={showOrdersMap}>Show Map</button>
                 </li>
             </ul>
         </div>

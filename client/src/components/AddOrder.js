@@ -162,7 +162,7 @@ export default function NewOrder() {
 
     const handleApprovement = (data, actions) => {
         return actions.order.capture().then(async (details) => {
-        console.log("Radi!!!!");
+            console.log("Radi!!!!");
             // const items = cartContext.cartItems.map((item) => ({
             //     productId: item.id,
             //     productAmount: item.quantity,
@@ -211,28 +211,33 @@ export default function NewOrder() {
                 <br /><br />
                 <div><h2 style={{ color: `red` }}>{cartInfo}</h2></div>
 
-                <div className="mb-3">
-                    <Autocomplete
-                        onLoad={(autocomplete) => {
-                            autocompleteRef.current = autocomplete;
-                        }}
-                        onPlaceChanged={() => {
-                            const selectedPlace = autocompleteRef.current.getPlace();
-                            if (selectedPlace && selectedPlace.formatted_address) {
-                                setAddress(selectedPlace.formatted_address);
-                            }
-                        }}
-                    >
-                        <input
-                            placeholder="Insert your address"
-                            type="text"
-                            id="address"
-                            required
-                        />
-                    </Autocomplete>
-                </div><br />
-                <div><input className="form-control" placeholder="Comment" type={"text"} name='comment' value={comment} onChange={handleInputChanges} ></input></div><br />
-                <input type={"submit"} className="btn btn-outline-success" name='poruci' value={"Create Order"} onClick={createOrder}></input><br />
+                <div className="mb-3 row  justify-content-center">
+                    <div className="col-4">
+                        <Autocomplete
+                            onLoad={(autocomplete) => {
+                                autocompleteRef.current = autocomplete;
+                            }}
+                            onPlaceChanged={() => {
+                                const selectedPlace = autocompleteRef.current.getPlace();
+                                if (selectedPlace && selectedPlace.formatted_address) {
+                                    setAddress(selectedPlace.formatted_address);
+                                }
+                            }}
+                        >
+
+                            <input
+                                placeholder="Insert your address"
+                                type="text"
+                                id="address"
+                                required
+                                className="form-control"
+                            />
+
+                        </Autocomplete>
+                        <div className="col-14"><input className="form-control" placeholder="Comment" type={"text"} name='comment' value={comment} onChange={handleInputChanges} ></input></div><br />
+                    </div><br />
+                </div>
+                <input type={"submit"} className="buttonPay" name='poruci' value={"Create Order"} onClick={createOrder}></input><br />
                 <PayPalScriptProvider
                     options={{ "client-id": "AZ6--ACQKvkCHEmfLHc01tiJrlF6_zP86RC2zKr8GpchbnmAN_wHBhZMCRSMi5KrSivSw45bMQ9L9w_6" }}
                 >

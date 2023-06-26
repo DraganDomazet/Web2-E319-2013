@@ -159,7 +159,7 @@ namespace OnlineStore.Services
 
             foreach (var o in orders)
             {
-                if (o.ProductIds != null)
+                if (o.ProductIds != null && !o.isAccepted)
                 {   
                     var a = o.ProductIds.Split('/').ToList();
                     if (a.Any(p => productsIds.Contains(p)))
@@ -175,6 +175,19 @@ namespace OnlineStore.Services
             return orderDtos;
 
         }
+
+        public bool AcceptOrder(Guid id)
+        {
+            Order order = _orderRepository.Find(id);
+            if (order != null)
+            {
+                order.isAccepted = true;
+                _orderRepository.AcceptOrder(order);
+                return true;
+            }
+            return false;
+        }
+
 
     }
 }
