@@ -27,8 +27,6 @@ export default function NewOrder() {
     };
 
     const tableArticles = async (e) => {
-        // const response = await Geocode.fromAddress("Eiffel Tower");
-        // const { lat, lng } = response.results[0].geometry.location;
         const resp = await GetAllArticles(config);
         setElements(resp.data);
     }
@@ -43,7 +41,6 @@ export default function NewOrder() {
         tableArticles();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
-
 
     const handleInputChanges = e => {
         const { name, value } = e.target
@@ -208,10 +205,9 @@ export default function NewOrder() {
                         {elementi}
                     </tbody>
                 </table>
-                <br /><br />
-                <div><h2 style={{ color: `red` }}>{cartInfo}</h2></div>
+                <div><h2 style={{ color: `red` }}>{cartInfo}</h2></div><br/>
 
-                <div className="mb-3 row  justify-content-center">
+                <div className="mb-3 row justify-content-center">
                     <div className="col-4">
                         <Autocomplete
                             onLoad={(autocomplete) => {
@@ -234,19 +230,24 @@ export default function NewOrder() {
                             />
 
                         </Autocomplete>
-                        <div className="col-14"><input className="form-control" placeholder="Comment" type={"text"} name='comment' value={comment} onChange={handleInputChanges} ></input></div><br />
-                    </div><br />
+                    </div>
+                    <div className="col-4"><input className="form-control" placeholder="Comment" type={"text"} name='comment' value={comment} onChange={handleInputChanges} ></input></div><br />
+                    <br />
                 </div>
-                <input type={"submit"} className="buttonPay" name='poruci' value={"Create Order"} onClick={createOrder}></input><br />
-                <PayPalScriptProvider
-                    options={{ "client-id": "AZ6--ACQKvkCHEmfLHc01tiJrlF6_zP86RC2zKr8GpchbnmAN_wHBhZMCRSMi5KrSivSw45bMQ9L9w_6" }}
-                >
-                    <PayPalButtons
-                        style={{ label: "checkout" }}
-                        createOrder={handlePayPalPayment}
-                        onApprove={handleApprovement}
-                    />
-                </PayPalScriptProvider>
+                <input type={"submit"} className="buttonPay" name='poruci' value={"Cash on arrival"} onClick={createOrder}></input><br />
+                <div className="row justify-content-center">
+                <div className="col-3">
+                    <PayPalScriptProvider
+                        options={{ "client-id": "AZ6--ACQKvkCHEmfLHc01tiJrlF6_zP86RC2zKr8GpchbnmAN_wHBhZMCRSMi5KrSivSw45bMQ9L9w_6" }}
+                    >
+                        <PayPalButtons
+                            style={{ label: "checkout" }}
+                            createOrder={handlePayPalPayment}
+                            onApprove={handleApprovement}
+                        />
+                    </PayPalScriptProvider>
+                </div>
+                </div>
             </div>
 
 
