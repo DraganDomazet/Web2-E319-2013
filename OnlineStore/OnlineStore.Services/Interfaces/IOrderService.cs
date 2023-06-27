@@ -10,6 +10,7 @@ namespace OnlineStore.Services.Interfaces
     public interface IOrderService
     {
         OrderReturnDto AddNew(OrderListDto orderDto);
+        double GetFinalPrice(OrderListDto orderDto);
         List<OrderDto> GetAllOrders();
         List<OrderDto> GetUserOrders(Guid id);
         List<OrderDto> GetOrders(Guid id); //order with product of current merchant

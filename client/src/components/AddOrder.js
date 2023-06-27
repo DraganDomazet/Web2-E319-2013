@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { GetAllArticles } from "../services/ProductService";
-import { AddOrder } from "../services/OrderService";
+import { AddOrder, GetPrice } from "../services/OrderService";
 import { useLocation, useNavigate } from 'react-router-dom';
 import { PayPalButtons, PayPalScriptProvider } from "@paypal/react-paypal-js";
 import { useJsApiLoader, Autocomplete } from "@react-google-maps/api";
@@ -16,10 +16,11 @@ export default function NewOrder() {
 
     const [elements, setElements] = useState([]);
     const [listOfArticles, setList] = useState([]);
-    const [address, setAddress] = useState('');
-    const [comment, setComment] = useState('');
+    const [address, setAddress] = useState('Kisacka, Novi Sad, Serbia');
+    const [comment, setComment] = useState('test');
     const [am, setAm] = useState(0);
     const [cartInfo, setCartInfo] = useState('Cart is empty!');
+    const [libraries] = useState(["places"]);
     const autocompleteRef = useRef(null);
 
     const config = {
@@ -34,7 +35,7 @@ export default function NewOrder() {
     const { isLoaded } = useJsApiLoader({
         googleMapsApiKey: process.env.REACT_APP_GEOCODE_KEY,
         language: "en",
-        libraries: ["places"]
+        libraries: libraries
     });
 
     useEffect(() => {
@@ -56,7 +57,7 @@ export default function NewOrder() {
     let validationError = "";
 
     const valid = () => {
-        if (address === '') {
+        if (address === "") {
             validationError = "You have to write your address!";
             alert(validationError);
         }
@@ -125,7 +126,7 @@ export default function NewOrder() {
         addQuantity(event, element);
     }
 
-    const elementi = elements.map(element => <tr key={element.name}>
+    const elementi = elements.map(element => <tr key={element.amount}>
         <td>
             {element.name}</td><td >{element.individualPrice}</td><td >
             {element.amount}</td><td>{element.description}</td>
@@ -134,22 +135,16 @@ export default function NewOrder() {
         <td><input type={"button"} className="btn btn-outline-success" onClick={(event) => addOnList(event, element)} value={"Add product to cart"}></input></td>
     </tr>);
 
-    // const handlePayPal = () => {
-    //     navigate('/review');
-    // }
-
-    const handlePayPalPayment = async (data, actions) => {
-        // const temp = cartContext.cartItems.map((item) => ({
-        //     productId: item.id,
-        //     productAmount: item.quantity,
-        // }));
-        // const price = await buyerService.getTotalPrice(temp);
+    const handlePayPalPayment = async (event, actions) => {
+        const Order = { Address: address, Comment: comment, UserId: location.state.user.id, Products: listOfArticles }
+        var priceObject = await GetPrice(Order, config);
+        
 
         return actions.order.create({
             purchase_units: [
                 {
                     amount: {
-                        value: "11.23",
+                        value: priceObject.data.toFixed(2),
                         currency_code: "USD",
                     },
                 },
@@ -205,7 +200,7 @@ export default function NewOrder() {
                         {elementi}
                     </tbody>
                 </table>
-                <div><h2 style={{ color: `red` }}>{cartInfo}</h2></div><br/>
+                <div><h2 style={{ color: `red` }}>{cartInfo}</h2></div><br />
 
                 <div className="mb-3 row justify-content-center">
                     <div className="col-4">
@@ -236,17 +231,17 @@ export default function NewOrder() {
                 </div>
                 <input type={"submit"} className="buttonPay" name='poruci' value={"Cash on arrival"} onClick={createOrder}></input><br />
                 <div className="row justify-content-center">
-                <div className="col-3">
-                    <PayPalScriptProvider
-                        options={{ "client-id": "AZ6--ACQKvkCHEmfLHc01tiJrlF6_zP86RC2zKr8GpchbnmAN_wHBhZMCRSMi5KrSivSw45bMQ9L9w_6" }}
-                    >
-                        <PayPalButtons
-                            style={{ label: "checkout" }}
-                            createOrder={handlePayPalPayment}
-                            onApprove={handleApprovement}
-                        />
-                    </PayPalScriptProvider>
-                </div>
+                    <div className="col-3">
+                        <PayPalScriptProvider
+                            options={{ "client-id": "AZ6--ACQKvkCHEmfLHc01tiJrlF6_zP86RC2zKr8GpchbnmAN_wHBhZMCRSMi5KrSivSw45bMQ9L9w_6" }}
+                        >
+                            <PayPalButtons
+                                style={{ label: "checkout" }}
+                                createOrder={handlePayPalPayment}
+                                onApprove={handleApprovement}
+                            />
+                        </PayPalScriptProvider>
+                    </div>
                 </div>
             </div>
 

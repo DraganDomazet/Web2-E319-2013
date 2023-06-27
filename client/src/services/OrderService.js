@@ -1,9 +1,13 @@
 import axios from 'axios'
-import { urlAddOrder, urlGetOrders, urlGetCustomerOrders, urlCancelOrder, urlGetMerchantOrders, urlAcceptOrder } from '../endpoints';
+import { urlAddOrder, urlGetOrders, urlGetCustomerOrders, urlCancelOrder, urlGetMerchantOrders, urlAcceptOrder, urlGetPrice } from '../endpoints';
 
 
 export const AddOrder = async (Order, config) => {
     return await axios.post(urlAddOrder, Order, config);
+}
+
+export const GetPrice = async (Order, config) => {
+    return await axios.post(urlGetPrice, Order, config);
 }
 
 export const GetAllOrders = async (config) => {

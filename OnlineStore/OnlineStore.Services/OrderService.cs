@@ -50,9 +50,7 @@ namespace OnlineStore.Services
                         orderBack.FinalyPrice += a.Amount * a.IndividualPrice;
                         order = new Order { CustomerId = orderDto.UserId, DeliveryAddress = orderDto.Address, Price = a.IndividualPrice, Comment = orderDto.Comment, Status = OrderState.Started };
                         order.Price = orderBack.FinalyPrice;
-                        orderBack.DeliveryTime = DateTime.Now.AddDays(1);
-                        order.TimeOfDelivery = orderBack.DeliveryTime;
-                        order.CancellationWindow = DateTime.Now;
+                        
 
 
                         products.Add(product);
@@ -95,8 +93,41 @@ namespace OnlineStore.Services
 
         }
 
+        public double GetFinalPrice(OrderListDto orderDto)
+        {
+            OrderReturnDto orderBack = new OrderReturnDto();
+            Order order = new Order();
+            List<Product> products = new List<Product>();
+            orderBack.FinalyPrice = 0;
+            double dostava = 4.99;
 
-        public List<OrderDto> GetAllOrders()
+            foreach (OrderLineItemDto a in orderDto.Products)
+            {
+                Product product = _productRepository.GetProductById(a.Id);
+
+                if (a != null)
+                {
+                    if (product.Amount >= a.Amount)
+                    {
+                        product.Amount -= a.Amount;
+                        orderBack.FinalyPrice += a.Amount * a.IndividualPrice;
+                        order = new Order { CustomerId = orderDto.UserId, DeliveryAddress = orderDto.Address, Price = a.IndividualPrice, Comment = orderDto.Comment, Status = OrderState.Started };
+                        order.Price = orderBack.FinalyPrice;
+
+
+
+                        products.Add(product);
+                        var b = 8;
+                    }
+                }
+
+            }
+            orderBack.FinalyPrice += dostava;
+            return orderBack.FinalyPrice;
+
+        }
+
+            public List<OrderDto> GetAllOrders()
         {
             List<OrderDto> orderDtos = new List<OrderDto>();
 
@@ -182,6 +213,8 @@ namespace OnlineStore.Services
             if (order != null)
             {
                 order.isAccepted = true;
+                order.TimeOfDelivery = DateTime.Now.AddDays(1);
+                order.CancellationWindow = DateTime.Now;
                 _orderRepository.AcceptOrder(order);
                 return true;
             }

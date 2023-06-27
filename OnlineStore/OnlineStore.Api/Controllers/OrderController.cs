@@ -25,6 +25,12 @@ namespace OnlineStore.Api.Controllers
             return Ok(_orderService.AddNew(orderDto));
         }
 
+        [HttpPost("get-price")]
+        public IActionResult GetFinalPrice([FromBody] OrderListDto orderDto)
+        {
+            return Ok(_orderService.GetFinalPrice(orderDto));
+        }
+
 
         [HttpGet("get-user-orders/{id}")]
         public IActionResult GetOld(Guid id)
