@@ -18,7 +18,6 @@ const ProductsMap = () => {
 
     const position = [45.264586472419314, 19.840730942252326];
     const [markersPositions, setMarkersPositions] = useState([]);
-    const [orders, setOrders] = useState([]);
 
     const markerIcon = new L.Icon({
         iconUrl: "package.png",
@@ -37,7 +36,6 @@ const ProductsMap = () => {
 
     const fetchData = async () => {
         const newOrders = await GetOrders(location.state.user.id, config);
-        setOrders(newOrders.data);
 
         const markersData = [];
         for (const o of newOrders.data) {
@@ -82,16 +80,14 @@ const ProductsMap = () => {
                                 <Popup>
                                     <p>Address: {marker.address}</p>
                                     <p>Price: ${marker.price}</p>
-                                    {!orders.find((order) => order.id === marker.id).isAccepted && (
-                                        <div className="container">
-                                            <button
-                                                className="btn btn-outline-primary"
-                                                onClick={() => handleAcceptOrder(marker.id)}
-                                            >
-                                                Accept
-                                            </button>
-                                        </div>
-                                    )}
+                                    <div className="container">
+                                        <button
+                                            className="btn btn-outline-primary"
+                                            onClick={() => handleAcceptOrder(marker.id)}
+                                        >
+                                            Accept
+                                        </button>
+                                    </div>
                                 </Popup>
                             </Marker>
                         </div>

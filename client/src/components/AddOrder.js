@@ -16,12 +16,18 @@ export default function NewOrder() {
 
     const [elements, setElements] = useState([]);
     const [listOfArticles, setList] = useState([]);
-    const [address, setAddress] = useState('Kisacka, Novi Sad, Serbia');
+    const [address, setAddress] = useState('');
     const [comment, setComment] = useState('test');
     const [am, setAm] = useState(0);
     const [cartInfo, setCartInfo] = useState('Cart is empty!');
     const [libraries] = useState(["places"]);
     const autocompleteRef = useRef(null);
+
+    const test = useRef("");
+
+    useEffect(() => {
+        test.current = address;
+    }, [address]);
 
     const config = {
         headers: { Authorization: 'Bearer ' + localStorage.getItem('token' + location.state.user.id) }
@@ -58,6 +64,26 @@ export default function NewOrder() {
 
     const valid = () => {
         if (address === "") {
+            validationError = "You have to write your address!";
+            alert(validationError);
+        }
+        else if (comment === "") {
+            validationError = "You have to type some comment!";
+            alert(validationError);
+        }
+        else if (listOfArticles.length === 0) {
+            validationError = "Order something! You article list is empty!";
+            alert(validationError);
+        }
+
+        if (validationError) {
+            return false;
+        }
+        return true;
+    }
+
+    const validPayPal = () => {
+        if (test.current === "") {
             validationError = "You have to write your address!";
             alert(validationError);
         }
@@ -136,9 +162,9 @@ export default function NewOrder() {
     </tr>);
 
     const handlePayPalPayment = async (event, actions) => {
-        const Order = { Address: address, Comment: comment, UserId: location.state.user.id, Products: listOfArticles }
+        const Order = { Address: test.current, Comment: comment, UserId: location.state.user.id, Products: listOfArticles }
         var priceObject = await GetPrice(Order, config);
-        
+
 
         return actions.order.create({
             purchase_units: [
@@ -154,27 +180,21 @@ export default function NewOrder() {
 
     const handleApprovement = (data, actions) => {
         return actions.order.capture().then(async (details) => {
-            console.log("Radi!!!!");
-            // const items = cartContext.cartItems.map((item) => ({
-            //     productId: item.id,
-            //     productAmount: item.quantity,
-            // }));
-
-            // const createOrderValues = {
-            //     items,
-            //     deliveryAddress: cartContext.address,
-            //     comment: cartContext.comment,
-            // };
-
-            // try {
-            //     await buyerService.createOrder(createOrderValues);
-            //     cartContext.clearCart();
-            //     cartContext.setCartAddress("");
-            //     cartContext.setCartComment("");
-            //     navigator("/previous-orders");
-            // } catch (error) {
-            //     if (error.response) alert(error.response.data.Exception);
-            // }
+            const config = {
+                headers: { Authorization: 'Bearer ' + localStorage.getItem('token' + location.state.user.id) }
+            };
+            const Order = { Address: test.current, Comment: comment, UserId: location.state.user.id, Products: listOfArticles }
+            if (validPayPal()) {
+                const resp = await AddOrder(Order, config);
+                if (resp.data.id === -1 || resp.data === '') {
+                    validationError = "You can not order this articles!";
+                    alert(validationError);
+                }
+                else {
+                    tableArticles();
+                    navigate("/homepage", { state: { user: location.state.user, order: true } })
+                }
+            }
         });
     };
 

@@ -26,7 +26,6 @@ export default function OldOrder() {
     const otkazi = async (event, element) => {
 
         event.preventDefault();
-        var id = element.id;
         const resp = await CancelOrder(element, config);
         console.log(resp);
         if (resp.data === false) {
@@ -36,10 +35,9 @@ export default function OldOrder() {
             OrdersTableFill();
         }
     }
-
     const elementi = elements.map(element => <tr key={element.timeOfDelivery}>
         <td>{element.price}</td>
-        <td>{element.timeOfDelivery.split('T')[0] + " at " + element.timeOfDelivery.split('T')[1]}</td>
+        <td>{element.timeOfDelivery.split('T')[0] === "0001-01-01" ? "Order not confirmed yet!" : element.timeOfDelivery.split('T')[0] + " at " + element.timeOfDelivery.split('T')[1]}</td>
         <td>{element.comment}</td><td>{element.deliveryAddress}</td>
         <td><input type={"button"} className="btn btn-link" onClick={(event) => otkazi(event, element)} value="Cancel Order"></input></td>
     </tr>);
@@ -49,6 +47,7 @@ export default function OldOrder() {
                 <div className="alert alert-warning"><strong><h1>Orders</h1></strong></div>
                 <table className="table table-bordered">
                     <tbody key="tbody">
+                    
 
                     <tr>
                         <td><b>Final price</b></td>
