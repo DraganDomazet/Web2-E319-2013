@@ -30,7 +30,7 @@ export default function LogIn() {
 
     const login = async e => {
 
-        e.preventDefault();
+        e.preventDefault(); 
         if (validate()) {
 
             const values = { Username: username, Password: password };
