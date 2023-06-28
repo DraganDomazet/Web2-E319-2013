@@ -1,6 +1,6 @@
 import { GetOrders } from "../services/OrderService";
 import React, { useState, useEffect } from "react";
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 
 export default function NewOrdersSaler(props) {

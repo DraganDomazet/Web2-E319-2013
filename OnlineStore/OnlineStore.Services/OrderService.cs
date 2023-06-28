@@ -54,7 +54,6 @@ namespace OnlineStore.Services
 
 
                         products.Add(product);
-                        var b = 8;
                     }
                     else
                     {
@@ -117,7 +116,6 @@ namespace OnlineStore.Services
 
 
                         products.Add(product);
-                        var b = 8;
                     }
                 }
 
@@ -167,7 +165,7 @@ namespace OnlineStore.Services
         public bool CancelOrder(Guid id)
         {
             Order order = _orderRepository.Find(id);
-            if (order.CancellationWindow >= order.TimeOfDelivery)
+            if (order.CancellationWindow >= DateTime.Now)
             {
                 _orderRepository.CancelOrder(order);
 
@@ -190,7 +188,7 @@ namespace OnlineStore.Services
 
             foreach (var o in orders)
             {
-                if (o.ProductIds != null && !o.isAccepted)
+                if (o.ProductIds != null && o.Status != OrderState.Canceled)
                 {   
                     var a = o.ProductIds.Split('/').ToList();
                     if (a.Any(p => productsIds.Contains(p)))
@@ -214,7 +212,7 @@ namespace OnlineStore.Services
             {
                 order.isAccepted = true;
                 order.TimeOfDelivery = DateTime.Now.AddDays(1);
-                order.CancellationWindow = DateTime.Now;
+                order.CancellationWindow = DateTime.Now.AddHours(1);
                 _orderRepository.AcceptOrder(order);
                 return true;
             }

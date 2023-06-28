@@ -39,12 +39,14 @@ const ProductsMap = () => {
 
         const markersData = [];
         for (const o of newOrders.data) {
-            try {
-                const response = await Geocode.fromAddress(o.deliveryAddress);
-                const { lat, lng } = response.results[0].geometry.location;
-                markersData.push({ id: o.id, lat: lat, lon: lng, price: o.price.toFixed(2), address: o.deliveryAddress });
-            } catch (error) {
-                console.log(error);
+            if (o.isAccepted === false) {
+                try {
+                    const response = await Geocode.fromAddress(o.deliveryAddress);
+                    const { lat, lng } = response.results[0].geometry.location;
+                    markersData.push({ id: o.id, lat: lat, lon: lng, price: o.price.toFixed(2), address: o.deliveryAddress });
+                } catch (error) {
+                    console.log(error);
+                }
             }
         }
 

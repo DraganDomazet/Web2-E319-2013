@@ -30,7 +30,7 @@ export default function LogIn() {
 
     const login = async e => {
 
-        e.preventDefault(); 
+        e.preventDefault();
         if (validate()) {
 
             const values = { Username: username, Password: password };
@@ -75,47 +75,51 @@ export default function LogIn() {
     }
 
     return (
-        <div>
-            <div className="row mx-auto col-10 col-md-8 col-lg-6">
-                <h2>
-                    {info === 'Merchant' ? "You sent a request for validation" : ""}
-                </h2>
-                <h2 className={'text-center'}>Please, log in</h2><br /><br />
-                <form className="row text-center" onSubmit={login} >
-                    <div className="row">
-                        <div className="col">
-                            <input placeholder="Username" className="form-control" type="text" name='username' value={username} onChange={handleInputChanges} ></input><br /><br />
+        <body style={{ backgroundColor: '#EEDD82' }}>
+            <div>
+                <div className="row mx-auto col-10 col-md-8 col-lg-6">
+                    <h2>
+                        {info === 'Merchant' ? "You sent a request for validation" : ""}
+                    </h2>
+                    <h2 className={'text-center'}>Log in</h2><br /><br />
+                    <form className="row text-center" onSubmit={login} >
+                        <div className="row">
+                            <div className="col">
+                                <input placeholder="Username" className="form-control" type="text" name='username' value={username} onChange={handleInputChanges} ></input><br /><br />
+                            </div>
+                            <div className="col">
+                                <input placeholder="Password" className="form-control" type="password" name='password' value={password} onChange={handleInputChanges}></input><br /><br />
+                            </div>
+                            <div className="col">
+                                <input type="submit" name='uloguj' value="Log in" onChange={handleInputChanges} className="btn btn-outline-danger"></input><br />
+                            </div>
                         </div>
+                    </form >
+                    <div className="col-4">
                         <div className="col">
-                            <input placeholder="Password" className="form-control" type="password" name='password' value={password} onChange={handleInputChanges}></input><br /><br />
+                            <button className="btn btn-outline-primary">
+                                <a href='/register'>Create account</a>
+                            </button>
                         </div>
-                        <div className="col">
-                            <input type="submit" name='uloguj' value="Log in" onChange={handleInputChanges} className="btn btn-primary"></input><br />
-                        </div>
-                        <div className="col"><LoginSocialFacebook
-                            appId={process.env.REACT_APP_CLIENT_ID}
-                            onResolve={(response) => {
-                                console.log(response);
-                                fbLogin(response.data.accessToken);
-                            }}
-                            onReject={(error) => {
-                                console.log(error);
-                            }}
-                        >
-                            <FacebookLoginButton />
-                        </LoginSocialFacebook></div>
                     </div>
-                </form >
-                <div className="col">
-                    <button className="btn btn-outline-primary">
-                        <a href='/register'>Create new account</a>
-                    </button>
-                </div>
-                <div className="col">
-                </div>
-            </div>
 
-            <br />
-        </div >
+                    <div className="col-4"><LoginSocialFacebook
+                        appId={process.env.REACT_APP_CLIENT_ID}
+                        onResolve={(response) => {
+                            console.log(response);
+                            fbLogin(response.data.accessToken);
+                        }}
+                        onReject={(error) => {
+                            console.log(error);
+                        }}
+                    >
+                        <FacebookLoginButton />
+                    </LoginSocialFacebook></div>
+
+                </div>
+
+                <br />
+            </div >
+        </body >
     )
 }

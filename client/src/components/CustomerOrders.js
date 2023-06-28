@@ -29,7 +29,7 @@ export default function OldOrder() {
         const resp = await CancelOrder(element, config);
         console.log(resp);
         if (resp.data === false) {
-            alert("Can not decline order");
+            alert("Cancelacion time has expired!");
         }
         else {
             OrdersTableFill();
@@ -47,7 +47,7 @@ export default function OldOrder() {
                 <div className="alert alert-warning"><strong><h1>Orders</h1></strong></div>
                 <table className="table table-bordered">
                     <tbody key="tbody">
-                    
+
 
                     <tr>
                         <td><b>Final price</b></td>
